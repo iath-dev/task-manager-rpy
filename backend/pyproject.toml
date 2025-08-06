@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{ include = "app" }]
 
 [tool.poetry.dependencies]
-python = ">=3.11"
+python = ">=3.11,<4.0"
 fastapi = "^0.116.1"
 uvicorn = { extras = ["standard"], version = "^0.35.0" }
 pydantic = "^2.11.7"
@@ -19,6 +19,7 @@ passlib = { extras = ["bcrypt"], version = "^1.7.4" }
 pydantic-settings = "^2.10.1"
 alembic = "^1.16.4"
 python-multipart = "^0.0.20"
+loguru = "^0.7.3"
 
 
 [build-system]
