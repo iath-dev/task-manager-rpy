@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Enum
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from datetime import datetime
 import enum
@@ -23,3 +24,6 @@ class User(Base):
     role = Column(Enum(RoleEnum), default=RoleEnum.common)
     created_at = Column(DateTime, default=datetime.utcnow)
     last_access = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    tasks_created = relationship("Task", foreign_keys="[Task.created_by_id]", back_populates="created_by")
+    tasks_assigned = relationship("Task", foreign_keys="[Task.assigned_to_id]", back_populates="assigned_to")
