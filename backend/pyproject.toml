@@ -20,6 +20,7 @@ pydantic-settings = "^2.10.1"
 alembic = "^1.16.4"
 python-multipart = "^0.0.20"
 loguru = "^0.7.3"
+slowapi = "^0.1.9"
 
 
 [build-system]
