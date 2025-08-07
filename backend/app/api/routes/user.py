@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from typing import List
-
 from app.schemas.user import UserCreate, UserOut
 from app.services import user_service
-from app.api.deps import get_db
+from app.api.deps import get_db, require_role
+from app.schemas.user import RoleEnum
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -16,7 +15,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@router.post("/", response_model=UserOut)
+@router.post("/", response_model=UserOut, dependencies=[Depends(require_role([RoleEnum.admin, RoleEnum.admin]))])
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     existing = user_service.get_user_by_email(db, user.email)
     if existing:
