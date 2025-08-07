@@ -48,8 +48,8 @@ def require_role(roles: Union[RoleEnum, List[RoleEnum]]):
     if isinstance(roles, RoleEnum):
         roles = [roles]
 
-    def dependency(user: dict = Depends(get_current_user)):
-        if user.get("role") in roles:
+    def dependency(user: User = Depends(get_current_user)):
+        if user.role not in roles:
             raise HTTPException(status_code=403, detail="Insufficient permissions")
         return user
     return dependency
