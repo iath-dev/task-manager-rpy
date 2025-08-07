@@ -5,6 +5,9 @@ from app.db.models.user import User
 from app.core.security import verify_password, create_access_token
 
 def auth_user(db: Session, email: str, password: str):
+    """
+    Verify if the user is register in the database and the password is valid
+    """
     user = db.query(User).filter(User.email == email).first()
     print(verify_password(password, user.password))
     
@@ -13,6 +16,9 @@ def auth_user(db: Session, email: str, password: str):
     return user
 
 def login_user(db: Session, email: str, password: str):
+    """
+    Login user and generate the JWT
+    """
     user = auth_user(db, email, password)
     token = create_access_token({"sub": str(user.id), "role": str(user.role)})
     return {"access_token": token, "token_type": "bearer"}

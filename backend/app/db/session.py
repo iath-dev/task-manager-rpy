@@ -11,6 +11,9 @@ engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def check_database() -> bool:
+    """
+    Check database connection
+    """
     try:
         db = SessionLocal()
         db.execute(text("SELECT 1"))
