@@ -21,7 +21,7 @@ def login_user(db: Session, email: str, password: str):
     """
     user = auth_user(db, email, password)
     token = create_access_token({"sub": str(user.id), "role": str(user.role)})
-    return {"access_token": token, "token_type": "bearer"}
+    return {"access_token": token, "token_type": "bearer", "user": user}
 
 def register_user(db: Session, user: UserCreate):
     """
@@ -44,4 +44,4 @@ def register_user(db: Session, user: UserCreate):
     db.refresh(db_user)
 
     token = create_access_token({"sub": str(db_user.id), "role": str(db_user.role)})
-    return {"access_token": token, "token_type": "bearer"}
+    return {"access_token": token, "token_type": "bearer", "user": db_user}

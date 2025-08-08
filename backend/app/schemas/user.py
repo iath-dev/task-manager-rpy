@@ -19,3 +19,10 @@ class UserOut(UserBase):
 
     class Config:
         from_attributes = True
+
+class UserLogin(UserBase):
+    id: int
+    role: RoleEnum
+
+    class Config:
+        from_attributes = True
