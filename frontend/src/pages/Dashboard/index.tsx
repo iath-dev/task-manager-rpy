@@ -1,8 +1,15 @@
+import { TaskList } from "@/components/TaskList/TaskList";
+
 export const DashboardPage = () => {
   return (
     <div>
-      <h1>Dashboard</h1>
-      <p>Welcome to your dashboard!</p>
+      <section className="grid grid-cols-2 grid-rows-2 gap-4">
+        <div>chart</div>
+        <div className="row-span-2">
+          <TaskList />
+        </div>
+        <div>chart</div>
+      </section>
     </div>
   );
 };
