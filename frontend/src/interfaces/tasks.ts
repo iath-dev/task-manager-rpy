@@ -8,7 +8,7 @@ export const PriorityEnum = {
 
 export type PriorityEnum = (typeof PriorityEnum)[keyof typeof PriorityEnum];
 
-export interface TaskResponse {
+export interface Task {
   title: string;
   description: string;
   due_date: string;

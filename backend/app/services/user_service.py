@@ -16,6 +16,12 @@ def get_user_by_email(db: Session, email: str):
     """
     return db.query(User).filter(User.email == email).first()
 
+def get_users(db: Session):
+    """
+    Get all users from the database
+    """
+    return db.query(User).all()
+
 def create_user(db: Session, user: UserCreate):
     """
     Create user with a basic common role

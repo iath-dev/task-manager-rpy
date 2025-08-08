@@ -1,20 +1,14 @@
 import React from "react";
+import dayjs from "dayjs";
+
+import { PriorityEnum, type Task } from "@/interfaces/tasks";
 import { ScrollArea } from "../ui/scroll-area";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Edit, Trash } from "lucide-react";
-import { PriorityEnum, type TaskResponse } from "@/interfaces/tasks";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
-import { Badge } from "../ui/badge";
 
 interface TaskListBodyProps {
-  tasks: TaskResponse[];
+  tasks: Task[];
 }
 
 const PriorityMap: Record<
@@ -29,45 +23,40 @@ const PriorityMap: Record<
 const TaskListBody: React.FC<TaskListBodyProps> = ({ tasks }) => {
   return (
     <ScrollArea className="min-h-36 max-h-72 whitespace-nowrap">
-      <Table className="w-full">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead>Priority</TableHead>
-            <TableHead>Assigned to</TableHead>
-            <TableHead></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {tasks.map((task, i) => (
-            <TableRow key={`task-item-${i}`}>
-              <TableCell>
-                <span className="font-medium">{task.title}</span>
-              </TableCell>
-              <TableCell>
+      <ul className="w-full max-h-72 space-y-3.5">
+        {tasks.map((task, i) => (
+          <li key={`task-item-${i}`} className="flex justify-between">
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-3">
+                <h4 className="text-gl font-medium font-sans first-letter:uppercase">
+                  {task.title}
+                </h4>
                 <Badge variant={PriorityMap[task.priority]}>
-                  {task.priority}
+                  {task.priority.toUpperCase()}
                 </Badge>
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline">
-                  {task.assigned_to?.email ?? "unassigned"}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <div>
-                  <Button variant="ghost" size="icon">
-                    <Trash />
-                  </Button>
-                  <Button variant="outline" size="icon">
-                    <Edit />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+              </div>
+              <div className="flex gap-3 font-mono text-xs text-gray-400">
+                {task.due_date && (
+                  <span className="tracking-tighter">
+                    Due to {dayjs(task.due_date).format("YYYY-MM-DD")}
+                  </span>
+                )}
+                <span className="tracking-tighter">
+                  Create by {task.created_by.email}
+                </span>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="ghost" size="icon">
+                <Trash />
+              </Button>
+              <Button variant="outline" size="icon">
+                <Edit />
+              </Button>
+            </div>
+          </li>
+        ))}
+      </ul>
     </ScrollArea>
   );
 };

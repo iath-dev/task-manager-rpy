@@ -1,12 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.schemas.user import UserCreate, UserOut
+from app.schemas.user import UserCreate, UserOut, UserOutPublic
 from app.services import user_service
 from app.api.deps import get_db, require_role
 from app.schemas.user import RoleEnum
 
 router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(require_role([RoleEnum.admin, RoleEnum.admin]))])
+
+@router.get("/", response_model=list[UserOutPublic])
+def read_users(db: Session = Depends(get_db)):
+    """
+    Get all users
+    """
+    return user_service.get_users(db)
 
 @router.get("/{user_id}", response_model=UserOut)
 def read_user(user_id: int, db: Session = Depends(get_db)):

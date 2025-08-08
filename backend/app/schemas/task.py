@@ -4,7 +4,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-from app.schemas.user import UserOut
+from app.schemas.user import UserOut, UserOutPublic
 
 class PriorityEnum(str, Enum):
     high = "high"
@@ -26,11 +26,18 @@ class TaskUpdate(TaskBase):
 
 class TaskOut(TaskBase):
     id: int
-    created_by: UserOut
-    assigned_to: Optional[UserOut] = None
+    created_by: UserOutPublic
+    assigned_to: Optional[UserOutPublic] = None
     created_at: datetime
     updated_at: datetime
     completed: bool
 
     class Config:
         from_attributes = True
+
+class TaskPage(BaseModel):
+    items: list[TaskOut]
+    total_items: int
+    total_pages: int
+    page: int
+    page_size: int

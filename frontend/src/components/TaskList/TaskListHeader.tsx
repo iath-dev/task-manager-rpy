@@ -11,22 +11,24 @@ import {
 } from "../ui/select";
 import type { filterSchemaType } from "@/schemas/query";
 import { useDebounce } from "use-debounce";
-import type { User } from "@/interfaces/user";
+import { useAuthStore } from "@/store/authStore";
+import TaskListUserFilter from "./TaskListUserFilter";
+import { Button } from "../ui/button";
+import { FilterX } from "lucide-react";
 
 interface TaskListHeaderProps {
-  users: User[];
   onSearch: (data: filterSchemaType) => void;
 }
 
-const TaskListHeader: React.FC<TaskListHeaderProps> = ({
-  users = [],
-  onSearch,
-}) => {
-  const [query, setQuery] = useState<filterSchemaType>({
-    search: "",
-    user: undefined,
-    priority: undefined,
-  });
+const defaultQuery = {
+  search: "",
+  user: undefined,
+  priority: undefined,
+};
+
+const TaskListHeader: React.FC<TaskListHeaderProps> = ({ onSearch }) => {
+  const { user: authData } = useAuthStore();
+  const [query, setQuery] = useState<filterSchemaType>(defaultQuery);
 
   const { priority, search, user } = query;
 
@@ -46,6 +48,10 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({
     setQuery((_query) => ({ ..._query, [key]: value }));
   };
 
+  const clearQuery = () => {
+    setQuery(() => defaultQuery);
+  };
+
   return (
     <div className="w-full flex items-center justify-end gap-2">
       <Input
@@ -54,21 +60,12 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({
         className="max-w-sm"
         onChange={(e) => handleChange("search", e.target.value)}
       />
-      <Select value={user} onValueChange={(val) => handleChange("user", val)}>
-        <SelectTrigger>
-          <SelectValue placeholder="Filter by user" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Users</SelectLabel>
-            {users.flatMap((user) => (
-              <SelectItem key={`user-item-${user.id}`} value={`${user.id}`}>
-                {user.full_name}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      {authData?.role == "ADMIN" && (
+        <TaskListUserFilter
+          value={user}
+          onValueChange={(val) => handleChange("user", val)}
+        />
+      )}
       <Select
         value={priority}
         onValueChange={(val) => handleChange("priority", val)}
@@ -87,6 +84,11 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({
           </SelectGroup>
         </SelectContent>
       </Select>
+      {query !== defaultQuery && (
+        <Button size="icon" variant="ghost" onClick={clearQuery}>
+          <FilterX />
+        </Button>
+      )}
     </div>
   );
 };

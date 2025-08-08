@@ -1,8 +1,18 @@
+import { TaskList } from "@/components/TaskList/TaskList";
+
 export const TaskListPage = () => {
   return (
-    <div>
-      <h1>Task List</h1>
-      <p>List of tasks will go here.</p>
-    </div>
+    <main>
+      <section>
+        <div className="lg:flex lg:items-center lg:justify-between">
+          <div className="min-w-0 flex-1 py-4">
+            <h2 className="text-2xl/7 font-bold sm:truncate sm:text-3xl sm:tracking-tight">
+              Task List
+            </h2>
+          </div>
+        </div>
+        <TaskList />
+      </section>
+    </main>
   );
 };

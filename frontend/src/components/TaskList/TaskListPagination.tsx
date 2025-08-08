@@ -51,6 +51,7 @@ const TaskListPagination: React.FC<TaskListPaginationProps> = ({
       <Button
         variant="outline"
         size="sm"
+        disabled={page === 1}
         onClick={() => onPageChange(page - 1)}
       >
         <ChevronLeft />
@@ -59,6 +60,7 @@ const TaskListPagination: React.FC<TaskListPaginationProps> = ({
       <Button
         variant="outline"
         size="sm"
+        disabled={page === totalPages}
         onClick={() => onPageChange(page + 1)}
       >
         <span className="hidden md:inline">Next</span>

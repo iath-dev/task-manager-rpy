@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { useTasks } from "@/hooks/useTasks";
 
 import {
   Card,
@@ -10,24 +11,44 @@ import type { filterSchemaType } from "@/schemas/query";
 import TaskListPagination from "./TaskListPagination";
 import TaskListHeader from "./TaskListHeader";
 import TaskListBody from "./TaskListBody";
-import { mockTasks, mockUsers } from "@/mocks/data";
+import { Skeleton } from "../ui/skeleton";
 
 interface TaskListProperties {
   defaultPageSize?: "5" | "10" | "15" | "20";
 }
 
 export const TaskList: React.FC<TaskListProperties> = ({
-  defaultPageSize = "10",
+  defaultPageSize = "5",
 }) => {
   const [pageSize, setPageSize] = useState<string>(defaultPageSize);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
+  // Nuevos estados para los filtros
+  const [search, setSearch] = useState<string | undefined>(undefined);
+  const [priority, setPriority] = useState<string | undefined>(undefined);
+  const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
 
-  const handleSearch = useCallback((query: filterSchemaType) => {
-    console.log(query);
+  const {
+    tasks = [],
+    totalPages = 1,
+    isLoading,
+  } = useTasks({
+    page,
+    pageSize: parseInt(pageSize),
+    search,
+    priority,
+    user_email: userEmail,
+  });
+
+  const handleSearch = useCallback((filters: filterSchemaType) => {
+    // Cuando los filtros cambian, reiniciamos la página a 1
+    setPage(1);
+    setSearch(filters.search);
+    setPriority(filters.priority);
+    setUserEmail(filters.user); // Asumiendo que filters.user es el email o ID que el backend espera
   }, []);
 
   const handleChangePage = (newPage: number) => {
-    if (newPage <= 10 && newPage >= 0) {
+    if (newPage <= totalPages && newPage >= 1) {
       setPage(newPage);
     }
   };
@@ -35,16 +56,20 @@ export const TaskList: React.FC<TaskListProperties> = ({
   return (
     <Card className="w-full">
       <CardHeader>
-        <TaskListHeader users={mockUsers} onSearch={handleSearch} />
+        <TaskListHeader onSearch={handleSearch} />
       </CardHeader>
       <CardContent>
-        <TaskListBody tasks={mockTasks} />
+        {isLoading ? (
+          <Skeleton className="w-full min-h-60" />
+        ) : (
+          <TaskListBody tasks={tasks} />
+        )}
       </CardContent>
       <CardFooter>
         <TaskListPagination
           page={page}
           pageSize={pageSize}
-          totalPages={10}
+          totalPages={totalPages || 0} // Usar totalPages del hook
           onPageChange={handleChangePage}
           onPageSizeChange={setPageSize}
         />

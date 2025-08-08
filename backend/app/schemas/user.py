@@ -27,3 +27,11 @@ class UserLogin(UserBase):
 
     class Config:
         from_attributes = True
+
+class UserOutPublic(BaseModel):
+    email: EmailStr
+    username: str
+    full_name: str
+
+    class Config:
+        from_attributes = True

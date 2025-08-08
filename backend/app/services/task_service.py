@@ -1,10 +1,11 @@
 
 from sqlalchemy.orm import Session
 from typing import List, Optional
+import math
 
 from app.db.models.task import Task
 from app.db.models.user import User, RoleEnum
-from app.schemas.task import TaskCreate, TaskUpdate
+from app.schemas.task import TaskCreate, TaskUpdate, PriorityEnum, TaskPage
 
 def get_task(db: Session, task_id: int, user: User) -> Optional[Task]:
     task = db.query(Task).filter(Task.id == task_id).first()
@@ -14,10 +15,47 @@ def get_task(db: Session, task_id: int, user: User) -> Optional[Task]:
         return task
     return None
 
-def get_tasks(db: Session, user: User, skip: int = 0, limit: int = 100) -> List[Task]:
-    if user.role == RoleEnum.admin or user.role == RoleEnum.super:
-        return db.query(Task).offset(skip).limit(limit).all()
-    return db.query(Task).filter((Task.created_by_id == user.id) | (Task.assigned_to_id == user.id)).offset(skip).limit(limit).all()
+def get_tasks(
+    db: Session,
+    user: User,
+    page: int = 1,
+    page_size: int = 10,
+    priority: Optional[PriorityEnum] = None,
+    search: Optional[str] = None,
+    user_email: Optional[str] = None,
+) -> TaskPage:
+    query = db.query(Task)
+
+    if user.role in [RoleEnum.admin, RoleEnum.super] and user_email:
+        user_to_filter = db.query(User).filter(User.email == user_email).first()
+        if user_to_filter:
+            query = query.filter(
+                (Task.created_by_id == user_to_filter.id) | (Task.assigned_to_id == user_to_filter.id)
+            )
+    elif user.role not in [RoleEnum.admin, RoleEnum.super]:
+        query = query.filter(
+            (Task.created_by_id == user.id) | (Task.assigned_to_id == user.id)
+        )
+
+    if priority:
+        query = query.filter(Task.priority == priority)
+
+    if search:
+        query = query.filter(Task.title.ilike(f"%{search}%"))
+
+    total_items = query.count()
+    total_pages = math.ceil(total_items / page_size)
+    offset = (page - 1) * page_size
+
+    tasks = query.offset(offset).limit(page_size).all()
+
+    return TaskPage(
+        items=tasks,
+        total_items=total_items,
+        total_pages=total_pages,
+        page=page,
+        page_size=page_size,
+    )
 
 def create_task(db: Session, task: TaskCreate, user_id: int) -> Task:
     db_task = Task(**task.model_dump(), created_by_id=user_id)

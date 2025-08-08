@@ -1,4 +1,4 @@
-import { PriorityEnum, type TaskResponse } from "@/interfaces/tasks";
+import { PriorityEnum, type Task } from "@/interfaces/tasks";
 import type { User } from "@/interfaces/user";
 
 export const mockUsers: User[] = [
@@ -22,7 +22,7 @@ export const mockUsers: User[] = [
   },
 ];
 
-export const mockTasks: TaskResponse[] = [
+export const mockTasks: Task[] = [
   {
     id: 1,
     title: "Implement authentication",
