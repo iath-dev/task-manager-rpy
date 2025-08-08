@@ -3,4 +3,12 @@ export interface User {
   username: string;
   full_name: string;
   id: number;
+  role: RoleEnum;
 }
+
+export const RoleEnum = {
+  Admin: "ADMIN",
+  User: "COMMON",
+} as const;
+
+export type RoleEnum = (typeof RoleEnum)[keyof typeof RoleEnum];

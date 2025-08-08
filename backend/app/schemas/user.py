@@ -10,6 +10,7 @@ class UserBase(BaseModel):
     email: EmailStr
     username: str = Field(..., min_length=6)
     full_name: str
+    role: RoleEnum
 
 class UserCreate(UserBase):
     password: str = Field(..., min_length=6)
