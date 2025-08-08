@@ -1,11 +1,13 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useNavigate } from "react-router-dom";
 
 import logo from "@/assets/logo.svg";
 
 import { useAuthStore } from "@/store/authStore";
 import type { AuthResponse } from "@/interfaces/auth";
+import apiClient from "@/services/api";
+import { loginSchema, type LoginFormInputs } from "@/schemas/login";
 import {
   Form,
   FormControl,
@@ -17,17 +19,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import apiClient from "@/services/api";
-import { useNavigate } from "react-router-dom";
-
-const loginSchema = z.object({
-  email: z.email({ message: "Invalid email address" }),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
-});
-
-type LoginFormInputs = z.infer<typeof loginSchema>;
 
 export const LoginPage = () => {
   const nav = useNavigate();
