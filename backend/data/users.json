@@ -1,0 +1,65 @@
+[
+  {
+    "username": "admin_user",
+    "email": "admin@example.com",
+    "password": "123456",
+    "full_name": "Admin User",
+    "role": "ADMIN"
+  },
+  {
+    "username": "user_user",
+    "email": "user@example.com",
+    "password": "123456",
+    "full_name": "Common User",
+    "role": "COMMON"
+  },
+  {
+    "username": "supe_user",
+    "email": "super@example.com",
+    "password": "123456",
+    "full_name": "Super User",
+    "role": "SUPER"
+  },
+  {
+    "username": "johndoe",
+    "email": "johndoe@example.com",
+    "password": "123456",
+    "full_name": "John Doe",
+    "role": "COMMON"
+  },
+  {
+    "username": "janedoe",
+    "email": "janedoe@example.com",
+    "password": "123456",
+    "full_name": "Jane Doe",
+    "role": "COMMON"
+  },
+  {
+    "username": "alice_mock",
+    "email": "alice@example.com",
+    "password": "123456",
+    "full_name": "Alice Smith",
+    "role": "COMMON"
+  },
+  {
+    "username": "bobjohn",
+    "email": "bob@example.com",
+    "password": "123456",
+    "full_name": "Bob Johnson",
+    "role": "COMMON"
+  },
+  {
+    "username": "charlie",
+    "email": "charlie@example.com",
+    "password": "123456",
+    "full_name": "Charlie Brown",
+    "role": "COMMON"
+  },
+  {
+    "username": "eveadam",
+    "email": "eve@example.com",
+    "password": "123456",
+    "full_name": "Eve Adams",
+    "role": "COMMON"
+  }
+]
