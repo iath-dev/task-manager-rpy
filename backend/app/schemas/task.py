@@ -18,11 +18,15 @@ class TaskBase(BaseModel):
     priority: PriorityEnum = PriorityEnum.medium
 
 class TaskCreate(TaskBase):
-    assigned_to: Optional[int] = None
+    assigned_to: Optional[str] = None
 
-class TaskUpdate(TaskBase):
+class TaskUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    due_date: Optional[datetime] = None
+    priority: Optional[PriorityEnum] = None
     completed: Optional[bool] = None
-    assigned_to: Optional[int] = None
+    assigned_to: Optional[str] = None
 
 class TaskOut(TaskBase):
     id: int

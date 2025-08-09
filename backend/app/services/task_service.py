@@ -6,6 +6,7 @@ import math
 from app.db.models.task import Task
 from app.db.models.user import User, RoleEnum
 from app.schemas.task import TaskCreate, TaskUpdate, PriorityEnum, TaskPage
+from app.services import user_service
 
 def get_task(db: Session, task_id: int, user: User) -> Optional[Task]:
     task = db.query(Task).filter(Task.id == task_id).first()
@@ -23,10 +24,13 @@ def get_tasks(
     priority: Optional[PriorityEnum] = None,
     search: Optional[str] = None,
     user_email: Optional[str] = None,
+    assigned_to_me: bool = False,
 ) -> TaskPage:
     query = db.query(Task)
 
-    if user.role in [RoleEnum.admin, RoleEnum.super] and user_email:
+    if assigned_to_me:
+        query = query.filter(Task.assigned_to_id == user.id)
+    elif user.role in [RoleEnum.admin, RoleEnum.super] and user_email:
         user_to_filter = db.query(User).filter(User.email == user_email).first()
         if user_to_filter:
             query = query.filter(
@@ -43,6 +47,8 @@ def get_tasks(
     if search:
         query = query.filter(Task.title.ilike(f"%{search}%"))
 
+    query = query.order_by(Task.created_at.desc())
+
     total_items = query.count()
     total_pages = math.ceil(total_items / page_size)
     offset = (page - 1) * page_size
@@ -57,8 +63,21 @@ def get_tasks(
         page_size=page_size,
     )
 
+def _assign_task_to_user(db: Session, task_data: dict):
+    if "assigned_to" in task_data and task_data["assigned_to"] is not None:
+        user_to_assign = user_service.get_user_by_email(db, email=task_data["assigned_to"])
+        if user_to_assign:
+            task_data["assigned_to_id"] = user_to_assign.id
+        else:
+            # Handle case where user is not found, maybe raise an exception
+            pass
+    if "assigned_to" in task_data:
+        del task_data["assigned_to"]
+
 def create_task(db: Session, task: TaskCreate, user_id: int) -> Task:
-    db_task = Task(**task.model_dump(), created_by_id=user_id)
+    task_data = task.model_dump()
+    _assign_task_to_user(db, task_data)
+    db_task = Task(**task_data, created_by_id=user_id)
     db.add(db_task)
     db.commit()
     db.refresh(db_task)
@@ -69,7 +88,10 @@ def update_task(db: Session, task_id: int, task_update: TaskUpdate, user: User) 
     if not db_task:
         return None
 
-    for key, value in task_update.model_dump(exclude_unset=True).items():
+    update_data = task_update.model_dump(exclude_unset=True)
+    _assign_task_to_user(db, update_data)
+
+    for key, value in update_data.items():
         setattr(db_task, key, value)
 
     db.commit()
