@@ -30,6 +30,8 @@ interface TaskFormProps {
   onSubmit: (values: TaskFormValues) => void;
   isPending: boolean;
   isEditMode?: boolean;
+  onMarkAsCompleted?: () => void; // Nueva prop
+  isCompleted?: boolean; // Nueva prop
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({
@@ -37,6 +39,8 @@ const TaskForm: React.FC<TaskFormProps> = ({
   onSubmit,
   isPending,
   isEditMode = false,
+  onMarkAsCompleted,
+  isCompleted = false,
 }) => {
   const { user } = useAuthStore();
   const form = useForm<TaskFormValues>({
@@ -150,9 +154,21 @@ const TaskForm: React.FC<TaskFormProps> = ({
             )}
           />
         )}
-        <Button type="submit" disabled={isPending}>
-          {isPending ? "Saving..." : isEditMode ? "Update Task" : "Create Task"}
-        </Button>
+        <div className="flex justify-between items-center w-full">
+          {isEditMode && !isCompleted && onMarkAsCompleted && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onMarkAsCompleted}
+              disabled={isPending}
+            >
+              Mark as Completed
+            </Button>
+          )}
+          <Button type="submit" disabled={isPending} className="ml-auto">
+            {isPending ? "Saving..." : isEditMode ? "Update Task" : "Create Task"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

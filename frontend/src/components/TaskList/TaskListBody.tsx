@@ -47,7 +47,7 @@ const TaskListBody: React.FC<TaskListBodyProps> = ({
                   <Badge variant="outline">Assigned to you</Badge>
                 )}
               </div>
-              <div className="flex gap-3 font-mono text-xs text-gray-400">
+              <div className="flex gap-2 font-mono text-xs text-gray-400">
                 {task.due_date && (
                   <span className="tracking-tighter">
                     Due to {dayjs(task.due_date).format("YYYY-MM-DD")}
@@ -56,6 +56,11 @@ const TaskListBody: React.FC<TaskListBodyProps> = ({
                 <span className="tracking-tighter">
                   Create by {task.created_by.email}
                 </span>
+                {task.completed && (
+                  <span className="tracking-tighter text-emerald-500">
+                    Completed
+                  </span>
+                )}
               </div>
             </div>
             <div className="flex gap-2">
