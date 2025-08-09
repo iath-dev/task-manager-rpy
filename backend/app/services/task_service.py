@@ -12,7 +12,8 @@ def get_task(db: Session, task_id: int, user: User) -> Optional[Task]:
     task = db.query(Task).filter(Task.id == task_id).first()
     if not task:
         return None
-    if user.role == RoleEnum.admin or task.created_by == user.id or task.assigned_to == user.id:
+    # Corrected condition to use the ID fields for comparison
+    if user.role == RoleEnum.admin or task.created_by_id == user.id or task.assigned_to_id == user.id:
         return task
     return None
 

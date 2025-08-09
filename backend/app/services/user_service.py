@@ -24,13 +24,14 @@ def get_users(db: Session):
 
 def create_user(db: Session, user: UserCreate):
     """
-    Create user with a basic common role
+    Create user with a specific role.
     """
     db_user = User(
         email=user.email,
         username=user.username,
         full_name=user.full_name,
-        password=hash_password(user.password)
+        password=hash_password(user.password),
+        role=user.role
     )
     db.add(db_user)
     db.commit()

@@ -20,7 +20,7 @@ def login_user(db: Session, email: str, password: str):
     Login user and generate the JWT
     """
     user = auth_user(db, email, password)
-    token = create_access_token({"sub": str(user.id), "role": str(user.role)})
+    token = create_access_token(user_id=user.id, email=user.email, role=user.role.value)
     return {"access_token": token, "token_type": "bearer", "user": user}
 
 def register_user(db: Session, user: UserCreate):
@@ -36,12 +36,13 @@ def register_user(db: Session, user: UserCreate):
         email=user.email,
         username=user.username,
         full_name=user.full_name,
-        password=hash_password(user.password)
+        password=hash_password(user.password),
+        role=user.role # Ensure role is passed from UserCreate
     )
 
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
 
-    token = create_access_token({"sub": str(db_user.id), "role": str(db_user.role)})
+    token = create_access_token(user_id=db_user.id, email=db_user.email, role=db_user.role.value)
     return {"access_token": token, "token_type": "bearer", "user": db_user}

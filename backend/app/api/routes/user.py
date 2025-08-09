@@ -6,7 +6,7 @@ from app.services import user_service
 from app.api.deps import get_db, require_role
 from app.schemas.user import RoleEnum
 
-router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(require_role([RoleEnum.admin, RoleEnum.admin]))])
+router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(require_role([RoleEnum.admin, RoleEnum.super]))])
 
 @router.get("/", response_model=list[UserOutPublic])
 def read_users(db: Session = Depends(get_db)):

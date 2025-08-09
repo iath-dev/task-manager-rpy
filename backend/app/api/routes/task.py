@@ -46,7 +46,6 @@ def read_task(task_id: int, db: Session = Depends(get_db), current_user: User = 
 
 @router.put("/{task_id}", response_model=TaskOut)
 def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    print(task_id)
     db_task = task_service.update_task(db, task_id=task_id, task_update=task, user=current_user)
     if db_task is None:
         raise HTTPException(status_code=404, detail="Task not found")
