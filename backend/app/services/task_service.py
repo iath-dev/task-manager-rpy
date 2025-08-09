@@ -5,8 +5,9 @@ import math
 
 from app.db.models.task import Task
 from app.db.models.user import User, RoleEnum
-from app.schemas.task import TaskCreate, TaskUpdate, PriorityEnum, TaskPage
+from app.schemas.task import TaskCreate, TaskUpdate, PriorityEnum, TaskPage, TaskStatistics
 from app.services import user_service
+from sqlalchemy import func
 
 def get_task(db: Session, task_id: int, user: User) -> Optional[Task]:
     task = db.query(Task).filter(Task.id == task_id).first()
@@ -62,6 +63,29 @@ def get_tasks(
         total_pages=total_pages,
         page=page,
         page_size=page_size,
+    )
+
+def get_task_statistics(db: Session, user: User) -> TaskStatistics:
+    query = db.query(Task)
+
+    if user.role not in [RoleEnum.admin, RoleEnum.super]:
+        query = query.filter(
+            (Task.created_by_id == user.id) | (Task.assigned_to_id == user.id)
+        )
+
+    total_tasks = query.count()
+    completed_tasks = query.filter(Task.completed == True).count()
+    pending_tasks = total_tasks - completed_tasks
+
+    completed_percentage = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0.0
+    pending_percentage = (pending_tasks / total_tasks * 100) if total_tasks > 0 else 0.0
+
+    return TaskStatistics(
+        total_tasks=total_tasks,
+        completed_tasks=completed_tasks,
+        pending_tasks=pending_tasks,
+        completed_percentage=completed_percentage,
+        pending_percentage=pending_percentage,
     )
 
 def _assign_task_to_user(db: Session, task_data: dict):

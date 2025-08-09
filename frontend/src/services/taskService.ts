@@ -1,4 +1,4 @@
-import type { Task } from "@/interfaces/tasks";
+import type { Task, TasksStatistics } from "@/interfaces/tasks";
 import type { PaginatedResponse } from "@/interfaces/pagination";
 import apiClient from "./api";
 import { delay } from "@/utils/delay";
@@ -73,4 +73,9 @@ export const updateTask = async (
  */
 export const deleteTask = async (id: number): Promise<void> => {
   await apiClient.delete(`/tasks/${id}`);
+};
+
+export const getStats = async (): Promise<TasksStatistics> => {
+  const { data } = await apiClient.get<TasksStatistics>(`/tasks/statistics`);
+  return data;
 };

@@ -45,3 +45,10 @@ class TaskPage(BaseModel):
     total_pages: int
     page: int
     page_size: int
+
+class TaskStatistics(BaseModel):
+    total_tasks: int
+    completed_tasks: int
+    pending_tasks: int
+    completed_percentage: float
+    pending_percentage: float

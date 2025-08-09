@@ -1,9 +1,8 @@
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import HTTPException, status, Depends, APIRouter
 from sqlalchemy.orm import Session
-from typing import List
 
-from app.schemas.task import TaskCreate, TaskUpdate, TaskOut, PriorityEnum, TaskPage
+from app.schemas.task import TaskCreate, TaskUpdate, TaskOut, PriorityEnum, TaskPage, TaskStatistics
 from app.services import task_service
 from app.api.deps import get_db, get_current_user
 from app.db.models.user import User
@@ -13,6 +12,13 @@ router = APIRouter(prefix="/tasks", tags=["Tasks"])
 @router.post("/", response_model=TaskOut, status_code=status.HTTP_201_CREATED)
 def create_task(task: TaskCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return task_service.create_task(db=db, task=task, user_id=current_user.id)
+
+@router.get("/statistics", response_model=TaskStatistics)
+def get_task_statistics(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Get task statistics (total, completed, pending, and percentages).
+    """
+    return task_service.get_task_statistics(db, current_user)
 
 @router.get("/", response_model=TaskPage)
 def read_tasks(

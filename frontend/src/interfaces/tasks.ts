@@ -20,3 +20,11 @@ export interface Task {
   updated_at: string;
   completed: boolean;
 }
+
+export interface TasksStatistics {
+  total_tasks: number;
+  completed_tasks: number;
+  pending_tasks: number;
+  completed_percentage: number;
+  pending_percentage: number;
+}
