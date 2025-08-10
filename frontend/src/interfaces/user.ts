@@ -1,16 +1,18 @@
+import type { Role } from "@/lib/constants";
+import type { UserFilterValues } from "@/services/userService";
+
 export interface User {
   email: string;
   username: string;
   full_name: string;
   id: number;
-  role: RoleEnum;
+  role: Role;
   last_access: string;
   is_active: boolean;
 }
 
-export const RoleEnum = {
-  Admin: "ADMIN",
-  User: "COMMON",
-} as const;
-
-export type RoleEnum = (typeof RoleEnum)[keyof typeof RoleEnum];
+export interface UseUsersParams {
+  page: number;
+  pageSize: number;
+  filter: UserFilterValues;
+}

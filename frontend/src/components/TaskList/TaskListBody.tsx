@@ -1,12 +1,13 @@
 import React from "react";
 import dayjs from "dayjs";
 
-import { PriorityEnum, type Task } from "@/interfaces/tasks";
+import { type Task } from "@/interfaces/tasks";
 import { ScrollArea } from "../ui/scroll-area";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Edit, Trash } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
+import type { Priority } from "@/lib/constants";
 
 interface TaskListBodyProps {
   tasks: Task[];
@@ -15,12 +16,12 @@ interface TaskListBodyProps {
 }
 
 const PriorityMap: Record<
-  PriorityEnum,
+  Priority,
   "destructive" | "secondary" | "outline" | "default" | "info" | "success"
 > = {
-  [PriorityEnum.High]: "destructive",
-  [PriorityEnum.Medium]: "info",
-  [PriorityEnum.Low]: "success",
+  high: "destructive",
+  medium: "info",
+  low: "success",
 };
 
 const TaskListBody: React.FC<TaskListBodyProps> = ({

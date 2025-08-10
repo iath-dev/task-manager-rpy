@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
-import { useTasks } from "@/hooks/useTasks";
-import { useDeleteTask } from "@/hooks/useTaskMutations";
+import { useDeleteTask, useTasks } from "@/hooks/useTasks";
 
 import {
   Card,

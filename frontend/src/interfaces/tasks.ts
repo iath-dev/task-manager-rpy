@@ -1,19 +1,12 @@
+import type { Priority } from "@/lib/constants";
 import type { User } from "./user";
-
-export const PriorityEnum = {
-  High: "high",
-  Medium: "medium",
-  Low: "low",
-} as const;
-
-export type PriorityEnum = (typeof PriorityEnum)[keyof typeof PriorityEnum];
 
 export interface Task {
   id: number;
   title: string;
   description: string;
   due_date: string;
-  priority: PriorityEnum;
+  priority: Priority;
   created_by: User;
   assigned_to?: User;
   created_at: string;
@@ -39,4 +32,15 @@ export interface TasksStatistics {
   pending_tasks: number;
   completed_percentage: number;
   pending_percentage: number;
+}
+
+export interface UseTasksParams {
+  page: number;
+  pageSize: number;
+  search?: string;
+  priority?: string;
+  user?: string; // user_email en el backend
+  assigned_to_me?: boolean; // Nuevo filtro
+  sort_by?: string;
+  sort_order?: "asc" | "desc";
 }

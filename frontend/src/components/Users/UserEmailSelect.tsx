@@ -13,15 +13,6 @@ import {
   CommandList,
 } from "../ui/command";
 
-// TODO: [COMPONENT_STRUCTURE][NAMING] This component is named `TaskListUserFilter` but is used in two different contexts:
-// 1. As a filter in the `TaskListHeader`.
-// 2. As a user selector in the `TaskForm`.
-// This dual responsibility can be confusing. Consider the following refactor:
-// - Rename this component to something more generic, like `UserSelect`.
-// - Move it to a more shared location, such as `src/components/Users/` or `src/components/shared/`,
-//   to reflect its reusable nature.
-// This will make its purpose clearer and improve the project's component structure.
-
 interface UserEmailSelectProps {
   value: string | undefined;
   onValueChange: (value: string | undefined) => void;

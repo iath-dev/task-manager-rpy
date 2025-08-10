@@ -1,4 +1,4 @@
-import { RoleEnum, type User } from "@/interfaces/user";
+import { type User } from "@/interfaces/user";
 import { redirect } from "react-router-dom";
 
 export function adminLoader() {
@@ -10,7 +10,7 @@ export function adminLoader() {
 
   try {
     const user: User = JSON.parse(userString);
-    if (user?.role !== RoleEnum.Admin) {
+    if (user?.role !== "ADMIN") {
       return redirect("/dashboard");
     }
   } catch (error) {

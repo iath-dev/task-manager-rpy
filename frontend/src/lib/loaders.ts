@@ -1,6 +1,6 @@
 import { redirect } from "react-router-dom";
 import apiClient from "@/services/api";
-import { RoleEnum, type User } from "@/interfaces/user";
+import { type User } from "@/interfaces/user";
 
 // --- Mejora de Rendimiento: Cache en Memoria ---
 // Esta variable guardará los datos del usuario durante la sesión de la aplicación.
@@ -32,7 +32,7 @@ export async function authLoader() {
  * Debe usarse en una ruta anidada bajo una ruta que ya use `authLoader`.
  */
 export async function adminLoader() {
-  if (userData?.role !== RoleEnum.Admin) {
+  if (userData?.role !== "ADMIN") {
     // Si el usuario en caché no es admin, se le deniega el acceso.
     return redirect("/dashboard");
   }

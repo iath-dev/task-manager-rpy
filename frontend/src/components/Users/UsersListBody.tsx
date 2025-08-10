@@ -9,8 +9,8 @@ import { Badge } from "../ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import UserForm from "./UserForm";
 import type { UserFormValues } from "@/schemas/user";
-import { useUpdateUser } from "@/hooks/useUserMutation";
 import { cn } from "@/lib/utils";
+import { useUpdateUser } from "@/hooks/useUsers";
 
 interface UserListProps {
   users: User[];

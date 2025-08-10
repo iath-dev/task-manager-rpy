@@ -1,11 +1,12 @@
-import type { RoleEnum, User } from "@/interfaces/user";
+import type { User } from "@/interfaces/user";
 import apiClient from "./api";
 import type { PaginatedResponse } from "@/interfaces/pagination";
 import type { UserFormValues } from "@/schemas/user";
+import type { Role } from "@/lib/constants";
 
 export interface UserFilterValues {
   search: string;
-  role?: RoleEnum;
+  role?: Role;
   sortBy?: SortOptionsType;
 }
 
