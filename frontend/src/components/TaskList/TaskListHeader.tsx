@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "../ui/input";
-import type { filterSchemaType } from "@/schemas/query";
 import { useDebounce } from "use-debounce";
 import { Button } from "../ui/button";
 import { PlusCircle } from "lucide-react";
@@ -14,75 +13,46 @@ import {
 import type { TaskFormValues } from "@/schemas/task";
 import { useCreateTask } from "@/hooks/useTaskMutations";
 import TaskForm from "../TaskForm/TaskForm";
-import TaskListUserFilter from "./TaskListUserFilter";
+import UserEmailSelect from "../Users/UserEmailSelect";
 import TaskListFilter from "./TaskListFilter";
+import { useTaskStore } from "@/store/taskStore";
+import type { filterSchemaType } from "@/schemas/query";
 
-interface TaskListHeaderProps {
-  onSearch: (data: filterSchemaType) => void;
-}
-
-const defaultQuery: filterSchemaType = {
-  search: "",
-  user: undefined,
-  priority: undefined,
-  assigned_to_me: undefined,
-  sort_by: undefined,
-  sort_order: undefined,
-};
-
-const TaskListHeader: React.FC<TaskListHeaderProps> = ({ onSearch }) => {
-  const [query, setQuery] = useState<filterSchemaType>(defaultQuery);
+const TaskListHeader: React.FC = () => {
+  const { filter, setFilter } = useTaskStore();
+  const [localQuery, setLocalQuery] = useState<filterSchemaType>(filter);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const { mutate: createTaskMutation, isPending } = useCreateTask();
 
-  const { priority, search, user, assigned_to_me, sort_by, sort_order } = query;
-
-  const [debounceSearch] = useDebounce(search, 500);
-  const [debounceUser] = useDebounce(user, 500);
-  const [debouncePriority] = useDebounce(priority, 500);
+  const [debouncedQuery] = useDebounce(localQuery, 500);
 
   useEffect(() => {
-    onSearch({
-      user: debounceUser,
-      search: debounceSearch,
-      priority: debouncePriority,
-      assigned_to_me: assigned_to_me,
-      sort_by: sort_by,
-      sort_order: sort_order,
-    });
-  }, [
-    debouncePriority,
-    debounceSearch,
-    debounceUser,
-    assigned_to_me,
-    sort_by,
-    sort_order,
-    onSearch,
-  ]);
+    setFilter(debouncedQuery);
+  }, [debouncedQuery, setFilter]);
+
+  useEffect(() => {
+    setLocalQuery(filter);
+  }, [filter]);
 
   const handleChange = (
     key: keyof filterSchemaType,
     value: string | boolean | undefined
   ) => {
-    console.log(`Changing ${key} to`, value);
-
-    setQuery((prevQuery) => {
+    setLocalQuery((prevQuery) => {
       const newQuery = { ...prevQuery, [key]: value };
 
-      // Lógica para manejar la exclusividad entre 'user' y 'assigned_to_me'
       if (key === "user") {
         if (value === "__assigned_to_me__") {
-          newQuery.user = undefined; // Asegurarse de que 'user' no se envíe
+          newQuery.user = undefined;
           newQuery.assigned_to_me = true;
         } else if (value !== undefined) {
-          newQuery.assigned_to_me = undefined; // Desactivar si se selecciona un usuario específico
+          newQuery.assigned_to_me = undefined;
         } else {
-          // value es undefined (limpiar filtro de usuario)
-          newQuery.assigned_to_me = undefined; // Desactivar si se limpia el filtro de usuario
+          newQuery.assigned_to_me = undefined;
         }
       } else if (key === "assigned_to_me" && value === true) {
-        newQuery.user = undefined; // Si se activa assigned_to_me, limpiar user
+        newQuery.user = undefined;
       }
       return newQuery;
     });
@@ -96,19 +66,19 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({ onSearch }) => {
   return (
     <div className="w-full flex items-center justify-end gap-2">
       <Input
-        value={search || ""} // Asegurar que el input no sea undefined
+        value={localQuery.search || ""}
         placeholder="Search"
         className="max-w-sm"
         onChange={(e) => handleChange("search", e.target.value)}
       />
-      <TaskListUserFilter
-        value={user}
+      <UserEmailSelect
+        value={localQuery.user}
         onValueChange={(val) => handleChange("user", val)}
       />
       <TaskListFilter
-        priority={priority}
-        sort_by={sort_by}
-        sort_order={sort_order}
+        priority={localQuery.priority}
+        sort_by={localQuery.sort_by}
+        sort_order={localQuery.sort_order}
         onChangeFilters={handleChange}
       />
 

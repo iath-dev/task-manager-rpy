@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "./button";
 import {
   Select,
   SelectContent,
@@ -8,20 +8,23 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "./select";
+import { PAGE_SIZE_OPTIONS } from "@/lib/constants";
 
-interface ListPagination {
+interface PaginationProps {
   page: number;
   pageSize: string;
   totalPages: number;
+  pageSizeOptions?: string[];
   onPageChange: (page: number) => void;
   onPageSizeChange: (page: string) => void;
 }
 
-const ListPagination: React.FC<ListPagination> = ({
+const Pagination: React.FC<PaginationProps> = ({
   page,
   pageSize,
   totalPages,
+  pageSizeOptions = PAGE_SIZE_OPTIONS,
   onPageChange,
   onPageSizeChange,
 }) => (
@@ -35,8 +38,8 @@ const ListPagination: React.FC<ListPagination> = ({
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Items per page</SelectLabel>
-            {[5, 10, 15].flatMap((perPage) => (
-              <SelectItem key={`page-size-${perPage}`} value={`${perPage}`}>
+            {pageSizeOptions.flatMap((perPage) => (
+              <SelectItem key={`page-size-${perPage}`} value={perPage}>
                 {perPage}
               </SelectItem>
             ))}
@@ -70,4 +73,4 @@ const ListPagination: React.FC<ListPagination> = ({
   </div>
 );
 
-export default ListPagination;
+export default Pagination;

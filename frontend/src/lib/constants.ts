@@ -20,3 +20,11 @@ export const ADMIN_NAV_LINK = {
   icon: ShieldCheck,
   role: RoleEnum.Admin,
 };
+
+export const PAGE_SIZE_OPTIONS = ["5", "10", "15", "20"] as const;
+
+export type PageSizeOption = (typeof PAGE_SIZE_OPTIONS)[number];
+
+export const PRIORITIES = ["high", "medium", "low"] as const;
+
+export type Priority = (typeof PRIORITIES)[number];

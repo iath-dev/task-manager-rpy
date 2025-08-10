@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import ListPagination from "@/components/ListPagination/ListPagination";
+import Pagination from "@/components/ui/pagination";
 import {
   Card,
   CardContent,
@@ -56,7 +56,7 @@ export default function AdminPanelPage() {
           <UserListContent users={users} />
         </CardContent>
         <CardFooter className="flex justify-end">
-          <ListPagination
+          <Pagination
             page={page}
             totalPages={totalPages || 1}
             pageSize={pageSize}

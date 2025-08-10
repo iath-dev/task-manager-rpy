@@ -9,11 +9,11 @@ export const PriorityEnum = {
 export type PriorityEnum = (typeof PriorityEnum)[keyof typeof PriorityEnum];
 
 export interface Task {
+  id: number;
   title: string;
   description: string;
   due_date: string;
   priority: PriorityEnum;
-  id: number;
   created_by: User;
   assigned_to?: User;
   created_at: string;

@@ -1,8 +1,7 @@
 import React from "react";
-import { Select } from "../ui/select";
 import { getUsersEmails } from "@/services/userService";
 import { useQuery } from "@tanstack/react-query";
-import { useAuthStore } from "@/store/authStore";
+import { useAuth } from "@/hooks/useAuth";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import {
@@ -14,16 +13,34 @@ import {
   CommandList,
 } from "../ui/command";
 
-const TaskListUserFilter: React.FC<React.ComponentProps<typeof Select>> = ({
+// TODO: [COMPONENT_STRUCTURE][NAMING] This component is named `TaskListUserFilter` but is used in two different contexts:
+// 1. As a filter in the `TaskListHeader`.
+// 2. As a user selector in the `TaskForm`.
+// This dual responsibility can be confusing. Consider the following refactor:
+// - Rename this component to something more generic, like `UserSelect`.
+// - Move it to a more shared location, such as `src/components/Users/` or `src/components/shared/`,
+//   to reflect its reusable nature.
+// This will make its purpose clearer and improve the project's component structure.
+
+interface UserEmailSelectProps {
+  value: string | undefined;
+  onValueChange: (value: string | undefined) => void;
+}
+
+const UserEmailSelect: React.FC<UserEmailSelectProps> = ({
   value,
   onValueChange,
 }) => {
-  const { user: authUser } = useAuthStore();
+  const { isAdmin } = useAuth();
   const { data } = useQuery({
-    enabled: authUser?.role === "ADMIN",
+    enabled: isAdmin,
     queryKey: ["emails"],
     queryFn: () => getUsersEmails(),
   });
+
+  const handleValueChange = (newValue: string) => {
+    onValueChange(newValue === value ? undefined : newValue);
+  };
 
   return (
     <Popover>
@@ -42,7 +59,7 @@ const TaskListUserFilter: React.FC<React.ComponentProps<typeof Select>> = ({
                 <CommandItem
                   key={`user-item-${email}`}
                   value={email}
-                  onSelect={onValueChange}
+                  onSelect={handleValueChange}
                 >
                   {email}
                 </CommandItem>
@@ -53,28 +70,6 @@ const TaskListUserFilter: React.FC<React.ComponentProps<typeof Select>> = ({
       </PopoverContent>
     </Popover>
   );
-
-  // return (
-  //   <Select {...props}>
-  //     <SelectTrigger>
-  //       <SelectValue placeholder="Filter by user" />
-  //     </SelectTrigger>
-  //     <SelectContent>
-  //       <SelectGroup>
-  //         <SelectLabel>Users</SelectLabel>
-  //         {authUser && (
-  //           <SelectItem value="__assigned_to_me__">Assigned to me</SelectItem>
-  //         )}
-  //         <SelectSeparator />
-  //         {data?.data.flatMap((email) => (
-  //           <SelectItem key={`user-item-${email}`} value={email}>
-  //             {email}
-  //           </SelectItem>
-  //         ))}
-  //       </SelectGroup>
-  //     </SelectContent>
-  //   </Select>
-  // );
 };
 
-export default TaskListUserFilter;
+export default UserEmailSelect;

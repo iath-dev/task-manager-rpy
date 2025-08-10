@@ -25,10 +25,10 @@ const filterKeyMap: Record<TaskSortableKeys, string> = {
   updated_at: "Updated At",
 };
 
-interface TaskListFilterProps extends filterSchemaType {
+interface TaskListFilterProps extends Partial<filterSchemaType> {
   onChangeFilters: (
-    filters: keyof filterSchemaType,
-    val: string | undefined
+    key: keyof filterSchemaType,
+    value: string | undefined
   ) => void;
 }
 
@@ -56,7 +56,10 @@ const TaskListFilter: React.FC<TaskListFilterProps> = ({
                 <DropdownMenuRadioGroup
                   value={priority}
                   onValueChange={(val) =>
-                    onChangeFilters("priority", priority === val ? undefined : val)
+                    onChangeFilters(
+                      "priority",
+                      priority === val ? undefined : val
+                    )
                   }
                 >
                   {["high", "medium", "low"].flatMap((_status) => (
@@ -80,7 +83,10 @@ const TaskListFilter: React.FC<TaskListFilterProps> = ({
                 <DropdownMenuRadioGroup
                   value={sort_by}
                   onValueChange={(val) =>
-                    onChangeFilters("sort_by", sort_by === val ? undefined : val)
+                    onChangeFilters(
+                      "sort_by",
+                      sort_by === val ? undefined : val
+                    )
                   }
                 >
                   {taskKeys.flatMap((key) => (

@@ -11,7 +11,7 @@ import {
 import {
   mapStatisticsToChartData,
   mapStatisticsToPercentages,
-} from "@/utils/charts";
+} from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Bar, BarChart } from "recharts";
 

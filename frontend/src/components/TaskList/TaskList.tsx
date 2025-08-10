@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { useTasks } from "@/hooks/useTasks";
-import { useUpdateTask, useDeleteTask } from "@/hooks/useTaskMutations";
+import { useDeleteTask } from "@/hooks/useTaskMutations";
 
 import {
   Card,
@@ -8,40 +8,17 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import type { filterSchemaType } from "@/schemas/query";
-import ListPagination from "../ListPagination/ListPagination";
+import Pagination from "../ui/pagination";
 import TaskListHeader from "./TaskListHeader";
 import TaskListBody from "./TaskListBody";
 import { Skeleton } from "../ui/skeleton";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import TaskForm from "../TaskForm/TaskForm";
 import type { Task } from "@/interfaces/tasks";
-import type { TaskFormValues } from "@/schemas/task";
+import { useTaskStore } from "@/store/taskStore";
+import EditTaskDialog from "./EditTaskDialog";
 
-interface TaskListProperties {
-  defaultPageSize?: "5" | "10" | "15" | "20";
-}
-
-export const TaskList: React.FC<TaskListProperties> = ({
-  defaultPageSize = "5",
-}) => {
-  const [pageSize, setPageSize] = useState<string>(defaultPageSize);
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState<string | undefined>(undefined);
-  const [priority, setPriority] = useState<string | undefined>(undefined);
-  const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
-  const [sortBy, setSortBy] = useState<keyof Task | undefined>(undefined);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
-    undefined
-  );
-
-  const [editingTask, setEditingTask] = useState<Task | null>(null); // Estado para la tarea en edición
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Estado para controlar el modal de edición
+export const TaskList: React.FC = () => {
+  const { page, pageSize, filter, setPage, setPageSize, setEditingTask } =
+    useTaskStore();
 
   const {
     tasks = [],
@@ -50,24 +27,10 @@ export const TaskList: React.FC<TaskListProperties> = ({
   } = useTasks({
     page,
     pageSize: parseInt(pageSize),
-    search,
-    priority,
-    user: userEmail,
-    sort_by: sortBy,
-    sort_order: sortOrder,
+    ...filter,
   });
 
-  const { mutate: updateTaskMutation, isPending: isUpdating } = useUpdateTask();
   const { mutate: deleteTaskMutation } = useDeleteTask();
-
-  const handleSearch = useCallback((filters: filterSchemaType) => {
-    setPage(1);
-    setSearch(filters.search);
-    setPriority(filters.priority);
-    setUserEmail(filters.user);
-    setSortBy(filters.sort_by);
-    setSortOrder(filters.sort_order);
-  }, []);
 
   const handleChangePage = (newPage: number) => {
     if (newPage <= totalPages && newPage >= 1) {
@@ -75,32 +38,12 @@ export const TaskList: React.FC<TaskListProperties> = ({
     }
   };
 
-  const handleEditTask = useCallback((task: Task) => {
-    setEditingTask(task);
-    setIsEditModalOpen(true);
-  }, []);
-
-  const handleEditSubmit = useCallback(
-    (values: TaskFormValues) => {
-      if (editingTask) {
-        updateTaskMutation(
-          { id: editingTask.id, taskData: values as Partial<Task> },
-          {
-            onSuccess: () => {
-              setIsEditModalOpen(false);
-              setEditingTask(null); // Limpiar la tarea en edición
-            },
-          }
-        );
-      }
+  const handleEditTask = useCallback(
+    (task: Task) => {
+      setEditingTask(task);
     },
-    [editingTask, updateTaskMutation]
+    [setEditingTask]
   );
-
-  const handleCloseEditModal = useCallback(() => {
-    setIsEditModalOpen(false);
-    setEditingTask(null); // Asegurarse de limpiar la tarea en edición al cerrar
-  }, []);
 
   const handleDeleteTask = useCallback(
     (taskId: number) => {
@@ -111,27 +54,10 @@ export const TaskList: React.FC<TaskListProperties> = ({
     [deleteTaskMutation]
   );
 
-  const handleMarkAsCompleted = useCallback(() => {
-    if (
-      editingTask &&
-      window.confirm("Are you sure you want to mark this task as completed?")
-    ) {
-      updateTaskMutation(
-        { id: editingTask.id, taskData: { completed: true } },
-        {
-          onSuccess: () => {
-            setIsEditModalOpen(false);
-            setEditingTask(null);
-          },
-        }
-      );
-    }
-  }, [editingTask, updateTaskMutation]);
-
   return (
     <Card className="w-full">
       <CardHeader>
-        <TaskListHeader onSearch={handleSearch} />
+        <TaskListHeader />
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -145,7 +71,7 @@ export const TaskList: React.FC<TaskListProperties> = ({
         )}
       </CardContent>
       <CardFooter>
-        <ListPagination
+        <Pagination
           page={page}
           pageSize={pageSize}
           totalPages={totalPages || 0}
@@ -154,32 +80,7 @@ export const TaskList: React.FC<TaskListProperties> = ({
         />
       </CardFooter>
 
-      {/* Diálogo de Edición Global */}
-      <Dialog open={isEditModalOpen} onOpenChange={handleCloseEditModal}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit Task</DialogTitle>
-          </DialogHeader>
-          {editingTask && (
-            <TaskForm
-              defaultValues={{
-                title: editingTask.title,
-                description: editingTask.description || "",
-                due_date: editingTask.due_date
-                  ? new Date(editingTask.due_date).toISOString().split("T")[0]
-                  : "",
-                priority: editingTask.priority || undefined,
-                assigned_to: editingTask.assigned_to?.email || undefined,
-              }}
-              onSubmit={handleEditSubmit}
-              isPending={isUpdating}
-              isEditMode={true}
-              onMarkAsCompleted={handleMarkAsCompleted}
-              isCompleted={editingTask.completed}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
+      <EditTaskDialog />
     </Card>
   );
 };

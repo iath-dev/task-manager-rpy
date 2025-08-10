@@ -22,16 +22,18 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 import { taskFormSchema, type TaskFormValues } from "@/schemas/task";
-import { useAuthStore } from "@/store/authStore";
-import TaskListUserFilter from "../TaskList/TaskListUserFilter";
+import UserEmailSelect from "../Users/UserEmailSelect";
+import { mapDatetimeToInputDate } from "@/lib/utils";
+import { useAuth } from "../../hooks/useAuth";
+import { PRIORITIES } from "@/lib/constants";
 
 interface TaskFormProps {
   defaultValues?: Partial<TaskFormValues>;
   onSubmit: (values: TaskFormValues) => void;
   isPending: boolean;
   isEditMode?: boolean;
-  onMarkAsCompleted?: () => void; // Nueva prop
-  isCompleted?: boolean; // Nueva prop
+  onMarkAsCompleted?: () => void;
+  isCompleted?: boolean;
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({
@@ -42,27 +44,20 @@ const TaskForm: React.FC<TaskFormProps> = ({
   onMarkAsCompleted,
   isCompleted = false,
 }) => {
-  const { user } = useAuthStore();
+  const { isAdmin } = useAuth();
   const form = useForm<TaskFormValues>({
     resolver: zodResolver(taskFormSchema),
     defaultValues: {
       ...defaultValues,
-      // Asegurarse de que due_date sea una cadena YYYY-MM-DD para el input type="date"
-      due_date: defaultValues?.due_date
-        ? defaultValues.due_date.split("T")[0]
-        : "",
-      // Asegurarse de que assigned_to sea una cadena o undefined
+      due_date: mapDatetimeToInputDate(defaultValues?.due_date),
       assigned_to: defaultValues?.assigned_to || undefined,
     },
   });
 
-  // Resetear el formulario cuando defaultValues cambien (para modo edición)
   useEffect(() => {
     form.reset({
       ...defaultValues,
-      due_date: defaultValues?.due_date
-        ? defaultValues.due_date.split("T")[0]
-        : "",
+      due_date: mapDatetimeToInputDate(defaultValues?.due_date),
       assigned_to: defaultValues?.assigned_to || undefined,
     });
   }, [defaultValues, form]);
@@ -101,7 +96,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
             control={form.control}
             name="due_date"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full">
                 <FormLabel>Due Date</FormLabel>
                 <FormControl>
                   <Input type="date" {...field} />
@@ -114,21 +109,23 @@ const TaskForm: React.FC<TaskFormProps> = ({
             control={form.control}
             name="priority"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full">
                 <FormLabel>Priority</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a priority" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="low">Low</SelectItem>
+                    {PRIORITIES.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        <span className="first-letter:uppercase">{option}</span>
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -136,7 +133,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
             )}
           />
         </div>
-        {user?.role == "ADMIN" && (
+        {isAdmin && (
           <FormField
             control={form.control}
             name="assigned_to"
@@ -144,7 +141,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
               <FormItem>
                 <FormLabel>Assigned To</FormLabel>
                 <FormControl>
-                  <TaskListUserFilter
+                  <UserEmailSelect
                     value={field.value}
                     onValueChange={field.onChange}
                   />
@@ -166,7 +163,11 @@ const TaskForm: React.FC<TaskFormProps> = ({
             </Button>
           )}
           <Button type="submit" disabled={isPending} className="ml-auto">
-            {isPending ? "Saving..." : isEditMode ? "Update Task" : "Create Task"}
+            {isPending
+              ? "Saving..."
+              : isEditMode
+              ? "Update Task"
+              : "Create Task"}
           </Button>
         </div>
       </form>

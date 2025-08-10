@@ -1,8 +1,8 @@
 import type { Task, TasksStatistics } from "@/interfaces/tasks";
 import type { PaginatedResponse } from "@/interfaces/pagination";
 import apiClient from "./api";
-import { delay } from "@/utils/delay";
 import type { TaskFormValues } from "@/schemas/task";
+import { delay } from "@/lib/utils";
 
 interface GetTasksParams {
   page: number;
