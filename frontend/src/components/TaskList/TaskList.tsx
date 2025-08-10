@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useTasks } from "@/hooks/useTasks";
-import { useCreateTask, useUpdateTask, useDeleteTask } from "@/hooks/useTaskMutations";
+import { useUpdateTask, useDeleteTask } from "@/hooks/useTaskMutations";
 
 import {
   Card,
@@ -9,12 +9,16 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import type { filterSchemaType } from "@/schemas/query";
-import TaskListPagination from "./TaskListPagination";
+import ListPagination from "../ListPagination/ListPagination";
 import TaskListHeader from "./TaskListHeader";
 import TaskListBody from "./TaskListBody";
-import { mockUsers } from "@/mocks/data";
 import { Skeleton } from "../ui/skeleton";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import TaskForm from "../TaskForm/TaskForm";
 import type { Task } from "@/interfaces/tasks";
 import type { TaskFormValues } from "@/schemas/task";
@@ -35,12 +39,16 @@ export const TaskList: React.FC<TaskListProperties> = ({
   const [editingTask, setEditingTask] = useState<Task | null>(null); // Estado para la tarea en edición
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Estado para controlar el modal de edición
 
-  const { tasks = [], totalPages = 1, isLoading } = useTasks({
+  const {
+    tasks = [],
+    totalPages = 1,
+    isLoading,
+  } = useTasks({
     page,
     pageSize: parseInt(pageSize),
     search,
     priority,
-    user_email: userEmail,
+    user: userEmail,
   });
 
   const { mutate: updateTaskMutation, isPending: isUpdating } = useUpdateTask();
@@ -64,53 +72,72 @@ export const TaskList: React.FC<TaskListProperties> = ({
     setIsEditModalOpen(true);
   }, []);
 
-  const handleEditSubmit = useCallback((values: TaskFormValues) => {
-    if (editingTask) {
-      updateTaskMutation({ id: editingTask.id, taskData: values as Partial<Task> }, {
-        onSuccess: () => {
-          setIsEditModalOpen(false);
-          setEditingTask(null); // Limpiar la tarea en edición
-        },
-      });
-    }
-  }, [editingTask, updateTaskMutation]);
+  const handleEditSubmit = useCallback(
+    (values: TaskFormValues) => {
+      if (editingTask) {
+        updateTaskMutation(
+          { id: editingTask.id, taskData: values as Partial<Task> },
+          {
+            onSuccess: () => {
+              setIsEditModalOpen(false);
+              setEditingTask(null); // Limpiar la tarea en edición
+            },
+          }
+        );
+      }
+    },
+    [editingTask, updateTaskMutation]
+  );
 
   const handleCloseEditModal = useCallback(() => {
     setIsEditModalOpen(false);
     setEditingTask(null); // Asegurarse de limpiar la tarea en edición al cerrar
   }, []);
 
-  const handleDeleteTask = useCallback((taskId: string) => {
-    if (window.confirm("Are you sure you want to delete this task?")) {
-      deleteTaskMutation(taskId);
-    }
-  }, [deleteTaskMutation]);
+  const handleDeleteTask = useCallback(
+    (taskId: number) => {
+      if (window.confirm("Are you sure you want to delete this task?")) {
+        deleteTaskMutation(taskId);
+      }
+    },
+    [deleteTaskMutation]
+  );
 
   const handleMarkAsCompleted = useCallback(() => {
-    if (editingTask && window.confirm("Are you sure you want to mark this task as completed?")) {
-      updateTaskMutation({ id: editingTask.id, taskData: { completed: true } }, {
-        onSuccess: () => {
-          setIsEditModalOpen(false);
-          setEditingTask(null);
-        },
-      });
+    if (
+      editingTask &&
+      window.confirm("Are you sure you want to mark this task as completed?")
+    ) {
+      updateTaskMutation(
+        { id: editingTask.id, taskData: { completed: true } },
+        {
+          onSuccess: () => {
+            setIsEditModalOpen(false);
+            setEditingTask(null);
+          },
+        }
+      );
     }
   }, [editingTask, updateTaskMutation]);
 
   return (
     <Card className="w-full">
       <CardHeader>
-        <TaskListHeader users={mockUsers} onSearch={handleSearch} />
+        <TaskListHeader onSearch={handleSearch} />
       </CardHeader>
       <CardContent>
         {isLoading ? (
           <Skeleton className="w-full min-h-60" />
         ) : (
-          <TaskListBody tasks={tasks} onEditTask={handleEditTask} onDeleteTask={handleDeleteTask} />
+          <TaskListBody
+            tasks={tasks}
+            onEditTask={handleEditTask}
+            onDeleteTask={handleDeleteTask}
+          />
         )}
       </CardContent>
       <CardFooter>
-        <TaskListPagination
+        <ListPagination
           page={page}
           pageSize={pageSize}
           totalPages={totalPages || 0}
@@ -130,9 +157,11 @@ export const TaskList: React.FC<TaskListProperties> = ({
               defaultValues={{
                 title: editingTask.title,
                 description: editingTask.description || "",
-                due_date: editingTask.due_date ? new Date(editingTask.due_date).toISOString().split('T')[0] : "",
+                due_date: editingTask.due_date
+                  ? new Date(editingTask.due_date).toISOString().split("T")[0]
+                  : "",
                 priority: editingTask.priority || undefined,
-                assigned_to: editingTask.assigned_to || undefined,
+                assigned_to: editingTask.assigned_to?.email || undefined,
               }}
               onSubmit={handleEditSubmit}
               isPending={isUpdating}

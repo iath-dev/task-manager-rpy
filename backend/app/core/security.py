@@ -35,14 +35,15 @@ def create_access_token(user_id: int, email: str, role: str, expires_delta: Opti
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-def decode_token(token: str) -> Optional[dict]:
+def decode_token(token: str, options: Optional[dict] = None) -> Optional[dict]:
     try:
-        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM], options=options)
     except JWTError:
         return None
     
-def get_token_data(token: str) -> dict:
-    payload = decode_token(token)
+def get_token_data(token: str, ignore_expiration: bool = False) -> dict:
+    options = {"verify_exp": not ignore_expiration}
+    payload = decode_token(token, options=options)
     if payload is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

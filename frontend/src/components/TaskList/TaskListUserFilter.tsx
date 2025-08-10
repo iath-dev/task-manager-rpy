@@ -9,7 +9,7 @@ import {
   SelectValue,
   SelectSeparator,
 } from "../ui/select";
-import { getUsers } from "@/services/userService";
+import { getUsersEmails } from "@/services/userService";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/authStore";
 
@@ -19,8 +19,8 @@ const TaskListUserFilter: React.FC<React.ComponentProps<typeof Select>> = (
   const { user: authUser } = useAuthStore();
   const { data } = useQuery({
     enabled: authUser?.role === "ADMIN",
-    queryKey: ["users"],
-    queryFn: () => getUsers(),
+    queryKey: ["emails"],
+    queryFn: () => getUsersEmails(),
   });
 
   return (
@@ -35,9 +35,9 @@ const TaskListUserFilter: React.FC<React.ComponentProps<typeof Select>> = (
             <SelectItem value="__assigned_to_me__">Assigned to me</SelectItem>
           )}
           <SelectSeparator />
-          {data?.data.flatMap((_user) => (
-            <SelectItem key={`user-item-${_user.email}`} value={_user.email}>
-              {_user.email}
+          {data?.data.flatMap((email) => (
+            <SelectItem key={`user-item-${email}`} value={email}>
+              {email}
             </SelectItem>
           ))}
         </SelectGroup>

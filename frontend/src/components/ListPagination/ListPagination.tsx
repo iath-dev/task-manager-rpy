@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "../ui/select";
 
-interface TaskListPaginationProps {
+interface ListPagination {
   page: number;
   pageSize: string;
   totalPages: number;
@@ -18,7 +18,7 @@ interface TaskListPaginationProps {
   onPageSizeChange: (page: string) => void;
 }
 
-const TaskListPagination: React.FC<TaskListPaginationProps> = ({
+const ListPagination: React.FC<ListPagination> = ({
   page,
   pageSize,
   totalPages,
@@ -70,4 +70,4 @@ const TaskListPagination: React.FC<TaskListPaginationProps> = ({
   </div>
 );
 
-export default TaskListPagination;
+export default ListPagination;

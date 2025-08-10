@@ -28,6 +28,12 @@ def db_setup_and_teardown():
     yield
     Base.metadata.drop_all(bind=engine)
 
+@pytest.fixture(scope="session", autouse=True)
+def seed_users_data():
+    db = TestingSessionLocal()
+    user_service.seed_users(db)
+    db.close()
+
 def get_db_override():
     try:
         db = TestingSessionLocal()
@@ -57,23 +63,14 @@ def test_user(db_session: Session) -> User:
         email=f"test_{uuid.uuid4()}@example.com",
         password="password",
         username=f"testuser_{uuid.uuid4().hex[:8]}",
-        full_name="Test User",
+        full_name=f"Test User {uuid.uuid4()}",
         role=RoleEnum.common
     )
     return user_service.create_user(db_session, user_in)
 
 @pytest.fixture(scope="function")
 def admin_user(db_session: Session) -> User:
-    import uuid
-    from app.schemas.user import RoleEnum
-    user_in = UserCreate(
-        email=f"admin_{uuid.uuid4()}@example.com",
-        password="password",
-        username=f"adminuser_{uuid.uuid4().hex[:8]}",
-        full_name="Admin User",
-        role=RoleEnum.admin
-    )
-    return user_service.create_user(db_session, user_in)
+    return user_service.get_user_by_email(db_session, "admin@example.com")
 
 @pytest.fixture(scope="function")
 def test_user_token_headers(test_user: User) -> Dict[str, str]:

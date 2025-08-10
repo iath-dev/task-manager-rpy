@@ -37,7 +37,7 @@ const TaskListBody: React.FC<TaskListBodyProps> = ({
           <li key={`task-item-${task.id}`} className="flex justify-between">
             <div className="flex flex-col gap-2">
               <div className="flex gap-3">
-                <h4 className="text-gl font-medium font-sans first-letter:uppercase">
+                <h4 className="text-lg font-medium font-sans first-letter:uppercase">
                   {task.title}
                 </h4>
                 <Badge variant={PriorityMap[task.priority]}>

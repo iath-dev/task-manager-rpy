@@ -4,6 +4,8 @@ export interface User {
   full_name: string;
   id: number;
   role: RoleEnum;
+  last_access: string;
+  is_active: boolean;
 }
 
 export const RoleEnum = {

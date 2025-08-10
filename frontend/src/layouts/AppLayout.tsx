@@ -15,7 +15,7 @@ export const AppLayout = () => {
       <Navbar />
       <main
         className={cn(
-          "flex-grow container mx-auto grid grid-cols-1 gap-4",
+          "flex-grow container mx-auto px-4 grid grid-cols-1 gap-4",
           isOpen && "lg:grid-cols-5"
         )}
       >

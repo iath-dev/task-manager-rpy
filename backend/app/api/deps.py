@@ -7,7 +7,7 @@ from typing import Union, List
 from app.db.models.user import User
 from app.schemas.user import RoleEnum
 from app.db.session import SessionLocal
-from app.core.security import decode_token
+from app.core.security import get_token_data
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -25,31 +25,28 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     """
     Get current user by decoding the JWT token.
     """
-    try:
-        payload = decode_token(token)
-        user_id: str = payload.get("sub")
-        # role: str = payload.get("role") # You can use this if you want to validate role from token
-        if user_id is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, 
-                detail="Invalid authentication credentials",
-                headers={"WWW-Authenticate": "Bearer"}
-            )
-    except JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"}
-        )
-
+    payload = get_token_data(token)
+    user_id: str = payload.get("sub")
     user = db.query(User).filter(User.id == int(user_id)).first()
-
-    print(f"User ID: {user_id}, User: {user}")
 
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     return user
+
+def get_current_user_for_refresh(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    """
+    Get current user by decoding the JWT token, allowing for expired tokens.
+    """
+    payload = get_token_data(token, ignore_expiration=True)
+    user_id: str = payload.get("sub")
+    user = db.query(User).filter(User.id == int(user_id)).first()
+
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    return user
+
     
 def require_role(roles: Union[RoleEnum, List[RoleEnum]]):
     """

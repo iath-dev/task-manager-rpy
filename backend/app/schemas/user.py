@@ -17,9 +17,15 @@ class UserCreate(UserBase):
 
 class UserOut(UserBase):
     id: int
+    is_active: bool
 
     class Config:
         from_attributes = True
+
+class UserUpdate(BaseModel):
+    full_name: str | None = None
+    is_active: bool | None = None
+    role: RoleEnum | None = None
 
 class UserLogin(UserBase):
     id: int
@@ -35,3 +41,20 @@ class UserOutPublic(BaseModel):
 
     class Config:
         from_attributes = True
+
+class UserPaginated(BaseModel):
+    items: list[UserOut]
+    total_items: int
+    total_pages: int
+    page: int
+    size: int
+
+class UserFilter(BaseModel):
+    full_name: str | None = None
+    role: RoleEnum | None = None
+
+class UserSortOptions(str, Enum):
+    full_name_asc = "full_name_asc"
+    full_name_desc = "full_name_desc"
+    email_asc = "email_asc"
+    email_desc = "email_desc"

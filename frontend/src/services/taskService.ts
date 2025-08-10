@@ -57,7 +57,7 @@ export const createTask = async (taskData: TaskFormValues): Promise<Task> => {
  */
 export const updateTask = async (
   id: number,
-  taskData: Partial<TaskFormValues>
+  taskData: Partial<Task>
 ): Promise<Task> => {
   const payload = {
     ...taskData,
