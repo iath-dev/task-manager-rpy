@@ -2,7 +2,7 @@
 from fastapi import HTTPException, status, Depends, APIRouter
 from sqlalchemy.orm import Session
 
-from app.schemas.task import TaskCreate, TaskUpdate, TaskOut, PriorityEnum, TaskPage, TaskStatistics
+from app.schemas.task import TaskCreate, TaskUpdate, TaskOut, PriorityEnum, TaskPage, TaskStatistics, TaskQueryParams
 from app.services import task_service
 from app.api.deps import get_db, get_current_user
 from app.db.models.user import User
@@ -22,24 +22,14 @@ def get_task_statistics(db: Session = Depends(get_db), current_user: User = Depe
 
 @router.get("/", response_model=TaskPage)
 def read_tasks(
-    page: int = 1,
-    page_size: int = 10,
-    priority: PriorityEnum = None,
-    search: str = None,
-    user_email: str = None,
-    assigned_to_me: bool = False,
+    query_params: TaskQueryParams = Depends(),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     tasks_page = task_service.get_tasks(
         db,
         user=current_user,
-        page=page,
-        page_size=page_size,
-        priority=priority,
-        search=search,
-        user_email=user_email,
-        assigned_to_me=assigned_to_me,
+        query_params=query_params,
     )
     return tasks_page
 

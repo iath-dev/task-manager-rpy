@@ -43,7 +43,6 @@ export default function AdminPanelPage() {
     setSearch(filterValues.search);
     setRole(filterValues.role);
     setSortBy(filterValues.sortBy);
-    console.log("Filter values updated:", filterValues);
   }, []);
 
   return (

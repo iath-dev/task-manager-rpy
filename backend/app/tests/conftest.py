@@ -44,10 +44,12 @@ def get_db_override():
 
 app.dependency_overrides[get_db] = get_db_override
 
-@pytest.fixture(scope="module")
-def client() -> Generator[TestClient, None, None]:
+@pytest.fixture(scope="function")
+def client(db_session: Session) -> Generator[TestClient, None, None]:
+    app.dependency_overrides[get_db] = lambda: db_session
     with TestClient(app) as c:
         yield c
+    app.dependency_overrides.pop(get_db)
 
 @pytest.fixture(scope="function")
 def db_session() -> Generator[Session, None, None]:

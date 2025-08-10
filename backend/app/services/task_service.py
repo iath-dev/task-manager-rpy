@@ -5,9 +5,9 @@ import math
 
 from app.db.models.task import Task
 from app.db.models.user import User, RoleEnum
-from app.schemas.task import TaskCreate, TaskUpdate, PriorityEnum, TaskPage, TaskStatistics
+from app.schemas.task import TaskCreate, TaskUpdate, PriorityEnum, TaskPage, TaskStatistics, TaskQueryParams, OrderDirection
 from app.services import user_service
-from sqlalchemy import func
+from sqlalchemy import func, asc, desc
 
 def get_task(db: Session, task_id: int, user: User) -> Optional[Task]:
     task = db.query(Task).filter(Task.id == task_id).first()
@@ -21,19 +21,14 @@ def get_task(db: Session, task_id: int, user: User) -> Optional[Task]:
 def get_tasks(
     db: Session,
     user: User,
-    page: int = 1,
-    page_size: int = 10,
-    priority: Optional[PriorityEnum] = None,
-    search: Optional[str] = None,
-    user_email: Optional[str] = None,
-    assigned_to_me: bool = False,
+    query_params: TaskQueryParams,
 ) -> TaskPage:
     query = db.query(Task)
 
-    if assigned_to_me:
+    if query_params.assigned_to_me:
         query = query.filter(Task.assigned_to_id == user.id)
-    elif user.role in [RoleEnum.admin, RoleEnum.super] and user_email:
-        user_to_filter = db.query(User).filter(User.email == user_email).first()
+    elif user.role in [RoleEnum.admin, RoleEnum.super] and query_params.user_email:
+        user_to_filter = db.query(User).filter(User.email == query_params.user_email).first()
         if user_to_filter:
             query = query.filter(
                 (Task.created_by_id == user_to_filter.id) | (Task.assigned_to_id == user_to_filter.id)
@@ -43,26 +38,33 @@ def get_tasks(
             (Task.created_by_id == user.id) | (Task.assigned_to_id == user.id)
         )
 
-    if priority:
-        query = query.filter(Task.priority == priority)
+    if query_params.priority:
+        query = query.filter(Task.priority == query_params.priority)
 
-    if search:
-        query = query.filter(Task.title.ilike(f"%{search}%"))
+    if query_params.search:
+        query = query.filter(Task.title.ilike(f"%{query_params.search}%"))
 
-    query = query.order_by(Task.created_at.desc())
+    # Apply ordering
+    order_column = getattr(Task, query_params.order_by.value)
+    if query_params.order_direction == OrderDirection.asc:
+        query = query.order_by(asc(order_column))
+    else:
+        query = query.order_by(desc(order_column))
 
     total_items = query.count()
-    total_pages = math.ceil(total_items / page_size)
-    offset = (page - 1) * page_size
+    total_pages = math.ceil(total_items / query_params.page_size)
+    offset = (query_params.page - 1) * query_params.page_size
 
-    tasks = query.offset(offset).limit(page_size).all()
+    tasks = query.offset(offset).limit(query_params.page_size).all()
 
     return TaskPage(
         items=tasks,
         total_items=total_items,
         total_pages=total_pages,
-        page=page,
-        page_size=page_size,
+        page=query_params.page,
+        page_size=query_params.page_size,
+        order_by=query_params.order_by,
+        order_direction=query_params.order_direction,
     )
 
 def get_task_statistics(db: Session, user: User) -> TaskStatistics:

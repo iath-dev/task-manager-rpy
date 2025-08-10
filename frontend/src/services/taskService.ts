@@ -11,6 +11,8 @@ interface GetTasksParams {
   priority?: string;
   user_email?: string;
   assigned_to_me?: boolean; // Nuevo filtro
+  order_by?: string;
+  order_direction?: "asc" | "desc";
 }
 
 /**
@@ -23,6 +25,8 @@ export const getTasks = async ({
   priority,
   user_email,
   assigned_to_me,
+  order_by,
+  order_direction,
 }: GetTasksParams): Promise<PaginatedResponse<Task>> => {
   await delay(2000);
 
@@ -34,6 +38,8 @@ export const getTasks = async ({
       assigned_to_me,
       priority,
       search,
+      order_by,
+      order_direction,
     },
   });
   return data;

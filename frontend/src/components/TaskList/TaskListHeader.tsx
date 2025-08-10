@@ -1,19 +1,9 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "../ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import type { filterSchemaType } from "@/schemas/query";
 import { useDebounce } from "use-debounce";
-import TaskListUserFilter from "./TaskListUserFilter";
 import { Button } from "../ui/button";
-import { FilterX, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +14,8 @@ import {
 import type { TaskFormValues } from "@/schemas/task";
 import { useCreateTask } from "@/hooks/useTaskMutations";
 import TaskForm from "../TaskForm/TaskForm";
+import TaskListUserFilter from "./TaskListUserFilter";
+import TaskListFilter from "./TaskListFilter";
 
 interface TaskListHeaderProps {
   onSearch: (data: filterSchemaType) => void;
@@ -34,6 +26,8 @@ const defaultQuery: filterSchemaType = {
   user: undefined,
   priority: undefined,
   assigned_to_me: undefined,
+  sort_by: undefined,
+  sort_order: undefined,
 };
 
 const TaskListHeader: React.FC<TaskListHeaderProps> = ({ onSearch }) => {
@@ -42,7 +36,7 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({ onSearch }) => {
 
   const { mutate: createTaskMutation, isPending } = useCreateTask();
 
-  const { priority, search, user, assigned_to_me } = query;
+  const { priority, search, user, assigned_to_me, sort_by, sort_order } = query;
 
   const [debounceSearch] = useDebounce(search, 500);
   const [debounceUser] = useDebounce(user, 500);
@@ -54,12 +48,16 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({ onSearch }) => {
       search: debounceSearch,
       priority: debouncePriority,
       assigned_to_me: assigned_to_me,
+      sort_by: sort_by,
+      sort_order: sort_order,
     });
   }, [
     debouncePriority,
     debounceSearch,
     debounceUser,
     assigned_to_me,
+    sort_by,
+    sort_order,
     onSearch,
   ]);
 
@@ -67,6 +65,8 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({ onSearch }) => {
     key: keyof filterSchemaType,
     value: string | boolean | undefined
   ) => {
+    console.log(`Changing ${key} to`, value);
+
     setQuery((prevQuery) => {
       const newQuery = { ...prevQuery, [key]: value };
 
@@ -88,36 +88,10 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({ onSearch }) => {
     });
   };
 
-  const clearQuery = () => {
-    setQuery(defaultQuery);
-  };
-
   const handleCreateSuccess = (data: TaskFormValues) => {
     createTaskMutation(data);
     setIsCreateModalOpen(false);
   };
-
-  // Lógica para el botón de limpiar filtros
-  const isFilterActive = useMemo(() => {
-    return Object.keys(query).some((key) => {
-      const defaultValue = defaultQuery[key as keyof filterSchemaType];
-      const currentValue = query[key as keyof filterSchemaType];
-
-      // Compara valores primitivos directamente
-      if (currentValue !== defaultValue) {
-        return true;
-      }
-      // Maneja casos donde undefined y '' son equivalentes para el filtro de búsqueda
-      if (
-        key === "search" &&
-        ((currentValue === "" && defaultValue === undefined) ||
-          (currentValue === undefined && defaultValue === ""))
-      ) {
-        return false;
-      }
-      return false;
-    });
-  }, [query]);
 
   return (
     <div className="w-full flex items-center justify-end gap-2">
@@ -128,38 +102,20 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({ onSearch }) => {
         onChange={(e) => handleChange("search", e.target.value)}
       />
       <TaskListUserFilter
-        value={user || (assigned_to_me ? "__assigned_to_me__" : undefined)} // Mostrar el valor correcto en el Select
+        value={user}
         onValueChange={(val) => handleChange("user", val)}
       />
-      <Select
-        value={priority || ""} // Asegurar que el Select no sea undefined
-        onValueChange={(val) => handleChange("priority", val)}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Filter by status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Status</SelectLabel>
-            {["high", "medium", "low"].flatMap((_status) => (
-              <SelectItem key={`status-item-${_status}`} value={_status}>
-                {_status.toUpperCase()}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      {isFilterActive && (
-        <Button size="icon" variant="ghost" onClick={clearQuery}>
-          <FilterX />
-        </Button>
-      )}
+      <TaskListFilter
+        priority={priority}
+        sort_by={sort_by}
+        sort_order={sort_order}
+        onChangeFilters={handleChange}
+      />
 
       <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">
-            <PlusCircle className="mr-2 h-4 w-4" />{" "}
-            <span className="hidden lg:flex">Create Task</span>
+          <Button variant="outline" size="icon">
+            <PlusCircle />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">

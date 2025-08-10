@@ -21,6 +21,18 @@ export interface Task {
   completed: boolean;
 }
 
+export type TaskSortableKeys = Exclude<
+  keyof Task,
+  "id" | "description" | "priority" | "assigned_to" | "created_by" | "completed"
+>;
+
+export const taskKeys = [
+  "title",
+  "due_date",
+  "created_at",
+  "updated_at",
+] as const satisfies TaskSortableKeys[];
+
 export interface TasksStatistics {
   total_tasks: number;
   completed_tasks: number;

@@ -35,6 +35,10 @@ export const TaskList: React.FC<TaskListProperties> = ({
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [priority, setPriority] = useState<string | undefined>(undefined);
   const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
+  const [sortBy, setSortBy] = useState<keyof Task | undefined>(undefined);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
+    undefined
+  );
 
   const [editingTask, setEditingTask] = useState<Task | null>(null); // Estado para la tarea en edición
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Estado para controlar el modal de edición
@@ -49,6 +53,8 @@ export const TaskList: React.FC<TaskListProperties> = ({
     search,
     priority,
     user: userEmail,
+    sort_by: sortBy,
+    sort_order: sortOrder,
   });
 
   const { mutate: updateTaskMutation, isPending: isUpdating } = useUpdateTask();
@@ -59,6 +65,8 @@ export const TaskList: React.FC<TaskListProperties> = ({
     setSearch(filters.search);
     setPriority(filters.priority);
     setUserEmail(filters.user);
+    setSortBy(filters.sort_by);
+    setSortOrder(filters.sort_order);
   }, []);
 
   const handleChangePage = (newPage: number) => {
