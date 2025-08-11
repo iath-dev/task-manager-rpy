@@ -37,6 +37,7 @@ export default tseslint.config([
       'no-debugger': 'error',
 
       // Import Order Rules
+      'react-refresh/only-export-components': 'off',
       'import/order': [
         'error',
         {
@@ -66,10 +67,7 @@ export default tseslint.config([
           ],
           'pathGroupsExcludedImportTypes': ['react'], // Exclude 'react' from other groups
           'newlines-between': 'always',
-          'alphabetize': {
-            order: 'asc',
-            caseInsensitive: true,
-          },
+          
         },
       ],
     },
