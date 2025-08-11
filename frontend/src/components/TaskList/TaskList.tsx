@@ -1,26 +1,18 @@
-import React, { useCallback } from "react";
+import React, { useCallback } from 'react'
 
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { useDeleteTask, useTasks } from '@/hooks/useTasks'
+import { useTaskStore } from '@/store/taskStore'
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { useDeleteTask, useTasks } from "@/hooks/useTasks";
-import type { Task } from "@/interfaces/tasks";
-import { useTaskStore } from "@/store/taskStore";
+import Pagination from '../ui/pagination'
+import { Skeleton } from '../ui/skeleton'
 
-import Pagination from "../ui/pagination";
-import { Skeleton } from "../ui/skeleton";
-
-import EditTaskDialog from "./EditTaskDialog";
-import TaskListBody from "./TaskListBody";
-import TaskListHeader from "./TaskListHeader";
+import EditTaskDialog from './EditTaskDialog'
+import TaskListBody from './TaskListBody'
+import TaskListHeader from './TaskListHeader'
 
 export const TaskList: React.FC = () => {
-  const { page, pageSize, filter, setPage, setPageSize, setEditingTask } =
-    useTaskStore();
+  const { page, pageSize, filter, setPage, setPageSize } = useTaskStore()
 
   const {
     tasks = [],
@@ -30,31 +22,24 @@ export const TaskList: React.FC = () => {
     page,
     pageSize: parseInt(pageSize),
     ...filter,
-  });
+  })
 
-  const { mutate: deleteTaskMutation } = useDeleteTask();
+  const { mutate: deleteTaskMutation } = useDeleteTask()
 
   const handleChangePage = (newPage: number) => {
     if (newPage <= totalPages && newPage >= 1) {
-      setPage(newPage);
+      setPage(newPage)
     }
-  };
-
-  const handleEditTask = useCallback(
-    (task: Task) => {
-      setEditingTask(task);
-    },
-    [setEditingTask]
-  );
+  }
 
   const handleDeleteTask = useCallback(
     (taskId: number) => {
-      if (window.confirm("Are you sure you want to delete this task?")) {
-        deleteTaskMutation(taskId);
+      if (window.confirm('Are you sure you want to delete this task?')) {
+        deleteTaskMutation(taskId)
       }
     },
-    [deleteTaskMutation]
-  );
+    [deleteTaskMutation],
+  )
 
   return (
     <Card className="w-full">
@@ -65,11 +50,7 @@ export const TaskList: React.FC = () => {
         {isLoading ? (
           <Skeleton className="w-full min-h-60" />
         ) : (
-          <TaskListBody
-            tasks={tasks}
-            onEditTask={handleEditTask}
-            onDeleteTask={handleDeleteTask}
-          />
+          <TaskListBody tasks={tasks} onDeleteTask={handleDeleteTask} />
         )}
       </CardContent>
       <CardFooter>
@@ -84,5 +65,5 @@ export const TaskList: React.FC = () => {
 
       <EditTaskDialog />
     </Card>
-  );
-};
+  )
+}

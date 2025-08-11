@@ -21,7 +21,8 @@ def test_create_comment_for_task(client: TestClient, db_session: Session, test_u
     content = response.json()
     assert content["content"] == comment_data["content"]
     assert content["task_id"] == task.id
-    assert content["owner_id"] == test_user.id
+    assert content["owner"]["email"] == test_user.email
+    assert content["owner"]["full_name"] == test_user.full_name
 
 def test_create_comment_for_nonexistent_task(client: TestClient, test_user_token_headers: dict):
     comment_data = {"content": "This is a test comment."}
@@ -70,7 +71,7 @@ def test_get_comments_for_task(client: TestClient, db_session: Session, test_use
     assert len(content) > 0
     assert content[0]["content"] == comment_data["content"]
     assert content[0]["task_id"] == task.id
-    assert content[0]["owner_id"] == test_user.id
+    assert content[0]["owner"]["email"] == test_user.email
 
 def test_get_comments_for_task_order(client: TestClient, db_session: Session, test_user: User, test_user_token_headers: dict):
     # Create a task first
@@ -104,6 +105,8 @@ def test_get_comments_for_task_order(client: TestClient, db_session: Session, te
     assert len(content) == 2
     assert content[0]["content"] == comment_data_2["content"]
     assert content[1]["content"] == comment_data_1["content"]
+    assert content[0]["owner"]["email"] == test_user.email
+    assert content[1]["owner"]["email"] == test_user.email
 
 def test_get_comments_for_nonexistent_task(client: TestClient, test_user_token_headers: dict):
     response = client.get(

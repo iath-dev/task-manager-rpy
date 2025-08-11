@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
+from app.schemas.user import UserOutPublic
 
 class CommentBase(BaseModel):
     content: str
@@ -10,8 +11,8 @@ class CommentCreate(CommentBase):
 class Comment(CommentBase):
     id: int
     task_id: int
-    owner_id: int
+    owner: UserOutPublic
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True

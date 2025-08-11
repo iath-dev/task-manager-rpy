@@ -28,6 +28,7 @@ import { taskFormSchema, type TaskFormValues } from '@/schemas/task'
 
 import { useAuth } from '../../hooks/useAuth'
 import UserEmailSelect from '../Users/UserEmailSelect'
+import CommentList from '../Comments/CommentsList'
 
 interface TaskFormProps {
   defaultValues?: Partial<TaskFormValues>
@@ -65,124 +66,129 @@ const TaskForm: React.FC<TaskFormProps> = ({
   }, [defaultValues, form])
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="flex gap-2">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <Input placeholder="Task title" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {isAdmin && (
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <div className="flex gap-2">
             <FormField
               control={form.control}
-              name="assigned_to"
+              name="title"
               render={({ field }) => (
-                <FormItem className="w-full max-w-xs">
-                  <FormLabel>Assigned To</FormLabel>
+                <FormItem className="w-full">
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <UserEmailSelect
-                      value={field.value}
-                      onValueChange={field.onChange}
-                    />
+                    <Input placeholder="Task title" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          )}
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem className="md:col-span-2">
-                <FormLabel>Description</FormLabel>
-                <FormControl className="h-42">
-                  <Textarea placeholder="Task description" {...field} />
-                </FormControl>
-                <FormDescription>
-                  Brief description of the task.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex flex-col gap-4">
-            <FormField
-              control={form.control}
-              name="due_date"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Due Date</FormLabel>
-                  <FormControl>
-                    <Input type="date" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="priority"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Priority</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl className="w-full">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a priority" />
-                      </SelectTrigger>
+            {isAdmin && (
+              <FormField
+                control={form.control}
+                name="assigned_to"
+                render={({ field }) => (
+                  <FormItem className="w-full max-w-xs">
+                    <FormLabel>Assigned To</FormLabel>
+                    <FormControl>
+                      <UserEmailSelect
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      />
                     </FormControl>
-                    <SelectContent>
-                      {PRIORITIES.map(option => (
-                        <SelectItem key={option} value={option}>
-                          <span className="first-letter:uppercase">
-                            {option}
-                          </span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem className="md:col-span-2">
+                  <FormLabel>Description</FormLabel>
+                  <FormControl className="h-42">
+                    <Textarea placeholder="Task description" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Brief description of the task.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            <div className="flex flex-col gap-4">
+              <FormField
+                control={form.control}
+                name="due_date"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Due Date</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="priority"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Priority</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl className="w-full">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a priority" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {PRIORITIES.map(option => (
+                          <SelectItem key={option} value={option}>
+                            <span className="first-letter:uppercase">
+                              {option}
+                            </span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-        </div>
-        <div className="flex justify-between items-center w-full">
-          {isEditMode && !isCompleted && onMarkAsCompleted && (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onMarkAsCompleted}
-              disabled={isPending}
-            >
-              Mark as Completed
+          <div className="flex justify-between items-center w-full">
+            {isEditMode && !isCompleted && onMarkAsCompleted && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onMarkAsCompleted}
+                disabled={isPending}
+              >
+                Mark as Completed
+              </Button>
+            )}
+            <Button type="submit" disabled={isPending} className="ml-auto">
+              {isPending
+                ? 'Saving...'
+                : isEditMode
+                ? 'Update Task'
+                : 'Create Task'}
             </Button>
-          )}
-          <Button type="submit" disabled={isPending} className="ml-auto">
-            {isPending
-              ? 'Saving...'
-              : isEditMode
-              ? 'Update Task'
-              : 'Create Task'}
-          </Button>
-        </div>
-      </form>
-    </Form>
+          </div>
+        </form>
+      </Form>
+      <div className="mt-4">
+        <CommentList />
+      </div>
+    </>
   )
 }
 
