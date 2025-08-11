@@ -1,6 +1,7 @@
+import { create } from "zustand";
+
 import type { Task } from "@/interfaces/tasks";
 import type { filterSchemaType } from "@/schemas/query";
-import { create } from "zustand";
 
 interface TaskState {
   page: number;

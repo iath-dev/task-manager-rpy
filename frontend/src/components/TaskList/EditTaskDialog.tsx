@@ -1,10 +1,12 @@
 import React, { useCallback, useMemo } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import TaskForm from "../TaskForm/TaskForm";
-import { useTaskStore } from "@/store/taskStore";
-import type { TaskFormValues } from "@/schemas/task";
-import type { Task } from "@/interfaces/tasks";
+
 import { useUpdateTask } from "@/hooks/useTasks";
+import type { Task } from "@/interfaces/tasks";
+import type { TaskFormValues } from "@/schemas/task";
+import { useTaskStore } from "@/store/taskStore";
+
+import TaskForm from "../TaskForm/TaskForm";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 
 const EditTaskDialog: React.FC = () => {
   const { editingTask, setEditingTask } = useTaskStore();

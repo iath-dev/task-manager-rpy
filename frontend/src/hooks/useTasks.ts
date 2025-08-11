@@ -1,13 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+
+import type { Task, UseTasksParams } from "@/interfaces/tasks";
+import type { TaskFormValues } from "@/schemas/task";
 import {
   createTask,
   deleteTask,
   getTasks,
   updateTask,
 } from "@/services/taskService";
-import type { Task, UseTasksParams } from "@/interfaces/tasks";
-import { toast } from "sonner";
-import type { TaskFormValues } from "@/schemas/task";
 
 // Query key factory for tasks
 export const taskKeys = {

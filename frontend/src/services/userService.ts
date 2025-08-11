@@ -1,8 +1,10 @@
-import type { User } from "@/interfaces/user";
-import apiClient from "./api";
 import type { PaginatedResponse } from "@/interfaces/pagination";
-import type { UserFormValues } from "@/schemas/user";
+import type { User } from "@/interfaces/user";
 import type { Role } from "@/lib/constants";
+import type { UserFormValues } from "@/schemas/user";
+
+import apiClient from "./api";
+
 
 export interface UserFilterValues {
   search: string;

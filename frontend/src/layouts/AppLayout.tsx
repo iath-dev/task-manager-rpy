@@ -1,13 +1,14 @@
 import { Suspense } from "react";
+
 import { Outlet } from "react-router-dom";
 
-import { Navbar } from "@/components/ui/navbar";
 import { Footer } from "@/components/ui/footer";
-import { Sidebar } from "@/components/ui/sidebar";
 import { Loader } from "@/components/ui/loader";
-import { useSidebarStore } from "@/store/sidebarStore";
-import { cn } from "@/lib/utils";
+import { Navbar } from "@/components/ui/navbar";
+import { Sidebar } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
+import { useSidebarStore } from "@/store/sidebarStore";
 
 export const AppLayout = () => {
   const { isOpen } = useSidebarStore();

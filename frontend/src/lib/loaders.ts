@@ -1,6 +1,7 @@
 import { redirect } from "react-router-dom";
-import apiClient from "@/services/api";
+
 import { type User } from "@/interfaces/user";
+import apiClient from "@/services/api";
 
 // --- Mejora de Rendimiento: Cache en Memoria ---
 // Esta variable guardará los datos del usuario durante la sesión de la aplicación.

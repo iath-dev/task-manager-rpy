@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from "react";
+
+import { useDebounce } from "use-debounce";
+
+import type { UserFilterValues, SortOptionsType } from "@/services/userService";
+
 import { Input } from "../ui/input";
 import {
   Select,
@@ -9,8 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { useDebounce } from "use-debounce";
-import type { UserFilterValues, SortOptionsType } from "@/services/userService";
 
 interface UsersListHeaderProps {
   onFilterChange: (filter: UserFilterValues) => void;

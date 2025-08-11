@@ -1,7 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import { NotFoundPage } from "@/pages/Shared/NotFoundPage";
+
 import { protectedRoutes } from "./protected";
 import { publicRoutes } from "./public";
-import { NotFoundPage } from "@/pages/Shared/NotFoundPage";
 
 export const AppRouter = () => {
   const commonRoutes = [

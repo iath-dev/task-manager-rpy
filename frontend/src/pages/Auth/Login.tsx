@@ -1,13 +1,10 @@
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import logo from "@/assets/logo.svg";
-
-import { useAuthStore } from "@/store/authStore";
-import type { AuthResponse } from "@/interfaces/auth";
-import apiClient from "@/services/api";
-import { loginSchema, type LoginFormInputs } from "@/schemas/login";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -17,8 +14,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import type { AuthResponse } from "@/interfaces/auth";
+import { loginSchema, type LoginFormInputs } from "@/schemas/login";
+import apiClient from "@/services/api";
+import { useAuthStore } from "@/store/authStore";
 
 export const LoginPage = () => {
   const nav = useNavigate();

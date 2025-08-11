@@ -1,3 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
+import { Bar, BarChart } from "recharts";
+
 import { TaskList } from "@/components/TaskList/TaskList";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -12,8 +15,6 @@ import {
   mapStatisticsToChartData,
   mapStatisticsToPercentages,
 } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
-import { Bar, BarChart } from "recharts";
 
 const noChartConfig = {
   total: {

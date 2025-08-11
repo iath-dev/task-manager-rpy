@@ -1,15 +1,15 @@
 import { useCallback, useState } from "react";
 
-import Pagination from "@/components/ui/pagination";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { useUsers } from "@/hooks/useUsers";
+import Pagination from "@/components/ui/pagination";
 import UserListContent from "@/components/Users/UsersListBody";
 import UsersListHeader from "@/components/Users/UsersListHeader";
+import { useUsers } from "@/hooks/useUsers";
 import type { UserFilterValues } from "@/services/userService";
 
 export default function AdminPanelPage() {

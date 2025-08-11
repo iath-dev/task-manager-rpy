@@ -1,5 +1,12 @@
-import type { filterSchemaType } from "@/schemas/query";
 import React from "react";
+
+import { Filter } from "lucide-react";
+
+import { taskKeys, type TaskSortableKeys } from "@/interfaces/tasks";
+import { ORDERS, PRIORITIES } from "@/lib/constants";
+import type { filterSchemaType } from "@/schemas/query";
+
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,9 +21,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Button } from "../ui/button";
-import { Filter } from "lucide-react";
-import { taskKeys, type TaskSortableKeys } from "@/interfaces/tasks";
 
 const filterKeyMap: Record<TaskSortableKeys, string> = {
   title: "Title",
@@ -62,7 +66,7 @@ const TaskListFilter: React.FC<TaskListFilterProps> = ({
                     )
                   }
                 >
-                  {["high", "medium", "low"].flatMap((_status) => (
+                  {PRIORITIES.flatMap((_status) => (
                     <DropdownMenuRadioItem
                       key={`status-item-${_status}`}
                       value={_status}
@@ -113,7 +117,7 @@ const TaskListFilter: React.FC<TaskListFilterProps> = ({
                     )
                   }
                 >
-                  {["asc", "desc"].flatMap((key) => (
+                  {ORDERS.flatMap((key) => (
                     <DropdownMenuRadioItem
                       key={`sort-order-${key}`}
                       value={key}

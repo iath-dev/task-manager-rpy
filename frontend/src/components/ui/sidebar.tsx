@@ -1,12 +1,14 @@
 import { useEffect } from "react";
+
+import { X } from "lucide-react";
 import { NavLink, useLoaderData } from "react-router-dom";
+
+import { Button, buttonVariants } from "@/components/ui/button";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import type { User } from "@/interfaces/user";
 import { ADMIN_NAV_LINK, NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { Button, buttonVariants } from "@/components/ui/button";
 import { useSidebarStore } from "@/store/sidebarStore";
-import type { User } from "@/interfaces/user";
-import { X } from "lucide-react";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export function Sidebar() {
   const { isOpen, setIsOpen } = useSidebarStore();

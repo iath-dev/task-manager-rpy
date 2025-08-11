@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useDeleteTask, useTasks } from "@/hooks/useTasks";
+
 
 import {
   Card,
@@ -7,13 +7,16 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import Pagination from "../ui/pagination";
-import TaskListHeader from "./TaskListHeader";
-import TaskListBody from "./TaskListBody";
-import { Skeleton } from "../ui/skeleton";
+import { useDeleteTask, useTasks } from "@/hooks/useTasks";
 import type { Task } from "@/interfaces/tasks";
 import { useTaskStore } from "@/store/taskStore";
+
+import Pagination from "../ui/pagination";
+import { Skeleton } from "../ui/skeleton";
+
 import EditTaskDialog from "./EditTaskDialog";
+import TaskListBody from "./TaskListBody";
+import TaskListHeader from "./TaskListHeader";
 
 export const TaskList: React.FC = () => {
   const { page, pageSize, filter, setPage, setPageSize, setEditingTask } =

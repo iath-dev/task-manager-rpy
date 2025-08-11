@@ -1,4 +1,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
+import { PAGE_SIZE_OPTIONS } from "@/lib/constants";
+
 import { Button } from "./button";
 import {
   Select,
@@ -9,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./select";
-import { PAGE_SIZE_OPTIONS } from "@/lib/constants";
 
 interface PaginationProps {
   page: number;

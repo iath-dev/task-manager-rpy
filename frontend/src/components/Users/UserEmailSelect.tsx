@@ -1,8 +1,10 @@
 import React from "react";
-import { getUsersEmails } from "@/services/userService";
+
 import { useQuery } from "@tanstack/react-query";
+
 import { useAuth } from "@/hooks/useAuth";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { getUsersEmails } from "@/services/userService";
+
 import { Button } from "../ui/button";
 import {
   Command,
@@ -12,6 +14,7 @@ import {
   CommandItem,
   CommandList,
 } from "../ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 interface UserEmailSelectProps {
   value: string | undefined;

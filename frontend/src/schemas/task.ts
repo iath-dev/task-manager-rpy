@@ -1,5 +1,6 @@
-import { PRIORITIES } from "@/lib/constants";
 import { z } from "zod";
+
+import { PRIORITIES } from "@/lib/constants";
 
 export const taskFormSchema = z.object({
   title: z.string().min(1, "Title is required"),

@@ -1,4 +1,5 @@
 import type { Priority } from "@/lib/constants";
+
 import type { User } from "./user";
 
 export interface Task {

@@ -1,13 +1,16 @@
 import React from "react";
-import dayjs from "dayjs";
+
+import { Edit, Trash } from "lucide-react";
 
 import { type Task } from "@/interfaces/tasks";
-import { ScrollArea } from "../ui/scroll-area";
+import type { Priority } from "@/lib/constants";
+import { mapDatetimeToInputDate } from "@/lib/utils";
+import { useAuthStore } from "@/store/authStore";
+
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { Edit, Trash } from "lucide-react";
-import { useAuthStore } from "@/store/authStore";
-import type { Priority } from "@/lib/constants";
+import { ScrollArea } from "../ui/scroll-area";
+
 
 interface TaskListBodyProps {
   tasks: Task[];
@@ -44,14 +47,14 @@ const TaskListBody: React.FC<TaskListBodyProps> = ({
                 <Badge variant={PriorityMap[task.priority]}>
                   {task.priority.toUpperCase()}
                 </Badge>
-                {user?.email == task.assigned_to?.email && (
+                {user?.email === task.assigned_to?.email && (
                   <Badge variant="outline">Assigned to you</Badge>
                 )}
               </div>
               <div className="flex gap-2 font-mono text-xs text-gray-400">
                 {task.due_date && (
                   <span className="tracking-tighter">
-                    Due to {dayjs(task.due_date).format("YYYY-MM-DD")}
+                    Due to {mapDatetimeToInputDate(task.due_date)}
                   </span>
                 )}
                 <span className="tracking-tighter">

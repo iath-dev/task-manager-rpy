@@ -1,16 +1,20 @@
 import React, { useCallback, useState } from "react";
-import dayjs from "dayjs";
 
-import type { User } from "@/interfaces/user";
-import { ScrollArea } from "../ui/scroll-area";
-import { Button } from "../ui/button";
+import dayjs from "dayjs";
 import { Edit3 } from "lucide-react";
-import { Badge } from "../ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import UserForm from "./UserForm";
-import type { UserFormValues } from "@/schemas/user";
-import { cn } from "@/lib/utils";
+
 import { useUpdateUser } from "@/hooks/useUsers";
+import type { User } from "@/interfaces/user";
+import { cn } from "@/lib/utils";
+import type { UserFormValues } from "@/schemas/user";
+
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { ScrollArea } from "../ui/scroll-area";
+
+import UserForm from "./UserForm";
+
 
 interface UserListProps {
   users: User[];

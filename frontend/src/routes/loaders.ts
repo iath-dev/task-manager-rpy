@@ -1,5 +1,6 @@
-import { type User } from "@/interfaces/user";
 import { redirect } from "react-router-dom";
+
+import { type User } from "@/interfaces/user";
 
 export function adminLoader() {
   const userString = localStorage.getItem("user");

@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUsers, updateUser } from "@/services/userService";
-import type { UserFormValues } from "@/schemas/user";
 import { toast } from "sonner";
+
 import type { UseUsersParams } from "@/interfaces/user";
+import type { UserFormValues } from "@/schemas/user";
+import { getUsers, updateUser } from "@/services/userService";
 
 export const userKeys = {
   all: ["users"] as const,

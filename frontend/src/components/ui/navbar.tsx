@@ -1,11 +1,12 @@
 import { Menu, Moon, Sun, SunMoon } from "lucide-react"; // Assuming lucide-react is installed
 import { Link, useNavigate } from "react-router";
 
-import { useTheme } from "@/hooks/useTheme";
-import { Button } from "./button";
 import logo from "@/assets/logo.svg";
+import { useTheme } from "@/hooks/useTheme";
 import { useAuthStore } from "@/store/authStore";
 import { useSidebarStore } from "@/store/sidebarStore";
+
+import { Button } from "./button";
 
 export const Navbar = () => {
   const { theme, setTheme } = useTheme();
