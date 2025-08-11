@@ -1,7 +1,11 @@
+import { lazy, Suspense } from 'react'
+
 import { redirect, type RouteObject } from 'react-router-dom'
 
 import { authLoader, adminLoader } from '@/lib/loaders'
-import AdminPanelPage from '@/pages/Admin/AdminPanelPage'
+import { Loader } from '@/components/ui/loader'
+
+const AdminPanelPage = lazy(() => import('@/pages/Admin/AdminPanelPage'))
 
 import { AppLayout } from '../layouts/AppLayout'
 import { DashboardPage } from '../pages/Dashboard'
@@ -18,7 +22,11 @@ export const protectedRoutes: RouteObject[] = [
       { path: 'tasks', element: <TaskListPage /> },
       {
         path: 'admin',
-        element: <AdminPanelPage />,
+        element: (
+          <Suspense fallback={<Loader />}>
+            <AdminPanelPage />
+          </Suspense>
+        ),
         loader: adminLoader, // <-- Loader de admin que usa la caché
       },
     ],
