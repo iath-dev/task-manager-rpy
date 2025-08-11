@@ -20,7 +20,6 @@ def test_create_user_as_admin(client: TestClient, admin_user_token_headers: Dict
         headers=admin_user_token_headers,
         json={
             "email": "newuser@example.com",
-            "username": "newuser",
             "full_name": "New User",
             "password": "password",
             "role": "COMMON"
@@ -29,7 +28,6 @@ def test_create_user_as_admin(client: TestClient, admin_user_token_headers: Dict
     assert response.status_code == HTTPStatus.OK
     data = response.json()
     assert data["email"] == "newuser@example.com"
-    assert data["username"] == "newuser"
     assert data["full_name"] == "New User"
     assert data["role"] == RoleEnum.common
 

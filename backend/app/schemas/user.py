@@ -8,7 +8,6 @@ class RoleEnum(str, Enum):
 
 class UserBase(BaseModel):
     email: EmailStr
-    username: str = Field(..., min_length=6)
     full_name: str
     role: RoleEnum
 
@@ -36,7 +35,6 @@ class UserLogin(UserBase):
 
 class UserOutPublic(BaseModel):
     email: EmailStr
-    username: str
     full_name: str
 
     class Config:

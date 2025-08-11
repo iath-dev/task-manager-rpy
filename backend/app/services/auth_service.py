@@ -37,7 +37,6 @@ def register_user(db: Session, user: UserCreate):
     
     db_user = User(
         email=user.email,
-        username=user.username,
         full_name=user.full_name,
         password=hash_password(user.password),
         role=user.role # Ensure role is passed from UserCreate

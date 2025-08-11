@@ -3,6 +3,7 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.middleware import SlowAPIMiddleware
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
 from app.core.logging import setup_logging
 from app.core.config import settings
@@ -34,6 +35,7 @@ app.add_middleware(
 
 app.state.limiter = limiter
 app.add_middleware(SlowAPIMiddleware)
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_exception_handler(429, _rate_limit_exceeded_handler)
 
 app.include_router(api_router, prefix=settings.API_V1_STR)

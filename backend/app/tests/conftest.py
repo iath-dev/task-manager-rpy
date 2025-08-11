@@ -64,7 +64,6 @@ def test_user(db_session: Session) -> User:
     user_in = UserCreate(
         email=f"test_{uuid.uuid4()}@example.com",
         password="password",
-        username=f"testuser_{uuid.uuid4().hex[:8]}",
         full_name=f"Test User {uuid.uuid4()}",
         role=RoleEnum.common
     )
