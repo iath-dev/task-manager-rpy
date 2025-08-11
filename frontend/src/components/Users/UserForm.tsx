@@ -1,12 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react'
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { userFormSchema, type UserFormValues } from "@/schemas/user";
+import {
+  createUserSchema,
+  updateUserSchema,
+  type CreateUserValues,
+  type UpdateUserValues,
+} from '@/schemas/user'
+import { cn } from '@/lib/utils'
 
-
-import { Button } from "../ui/button";
+import { Button } from '../ui/button'
 import {
   Form,
   FormControl,
@@ -14,45 +19,49 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+} from '../ui/form'
+import { Input } from '../ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { Switch } from "../ui/switch";
+} from '../ui/select'
+import { Switch } from '../ui/switch'
 
 interface UserFormProps {
-  defaultValues: UserFormValues;
-  isPending?: boolean;
-  onSubmit: (values: UserFormValues) => void;
+  defaultValues?: CreateUserValues | UpdateUserValues
+  isPending?: boolean
+  isEditMode?: boolean
+  onSubmit: (values: CreateUserValues | UpdateUserValues) => void
 }
 
 const UserForm: React.FC<UserFormProps> = ({
   defaultValues,
   isPending,
+  isEditMode = false,
   onSubmit,
 }) => {
-  const form = useForm<UserFormValues>({
-    resolver: zodResolver(userFormSchema),
+  const schema = isEditMode ? updateUserSchema : createUserSchema
+
+  const form = useForm<CreateUserValues | UpdateUserValues>({
+    resolver: zodResolver(schema),
     defaultValues: {
       ...defaultValues,
     },
-  });
+  })
 
   useEffect(() => {
     form.reset({
       ...defaultValues,
-    });
-  }, [defaultValues, form]);
+    })
+  }, [defaultValues, form])
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-4">
           <FormField
             control={form.control}
             name="full_name"
@@ -72,51 +81,98 @@ const UserForm: React.FC<UserFormProps> = ({
           />
           <FormField
             control={form.control}
-            name="role"
+            name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Role</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select an role" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="ADMIN">Admin</SelectItem>
-                    <SelectItem value="COMMON">Common</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="is_active"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
+                  <Input
+                    placeholder="Task title"
+                    className="w-full max-w-md"
+                    type="email"
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+          {!isEditMode && (
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Task title"
+                      className="w-full max-w-md"
+                      type="password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+          <div
+            className={cn('grid gap-2', {
+              'grid-cols-1': !isEditMode,
+              'grid-cols-2': isEditMode,
+            })}
+          >
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select an role" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="ADMIN">Admin</SelectItem>
+                      <SelectItem value="COMMON">Common</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {isEditMode && (
+              <FormField
+                control={form.control}
+                name="is_active"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status</FormLabel>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+          </div>
         </div>
         <Button type="submit" disabled={isPending} className="ml-auto">
-          {isPending ? "Saving..." : "Save changes"}
+          {isPending ? 'Saving...' : 'Save changes'}
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}
 
-export default UserForm;
+export default UserForm

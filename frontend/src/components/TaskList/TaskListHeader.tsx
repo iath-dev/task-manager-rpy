@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
 
-import { PlusCircle } from "lucide-react";
-import { useDebounce } from "use-debounce";
+import { PlusCircle } from 'lucide-react'
+import { useDebounce } from 'use-debounce'
 
 import {
   Dialog,
@@ -9,76 +9,75 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { useCreateTask } from "@/hooks/useTasks";
-import type { filterSchemaType } from "@/schemas/query";
-import type { TaskFormValues } from "@/schemas/task";
-import { useTaskStore } from "@/store/taskStore";
+} from '@/components/ui/dialog'
+import { useCreateTask } from '@/hooks/useTasks'
+import type { filterSchemaType } from '@/schemas/query'
+import type { TaskFormValues } from '@/schemas/task'
+import { useTaskStore } from '@/store/taskStore'
 
-import TaskForm from "../TaskForm/TaskForm";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import UserEmailSelect from "../Users/UserEmailSelect";
+import TaskForm from '../TaskForm/TaskForm'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
+import UserEmailSelect from '../Users/UserEmailSelect'
 
-import TaskListFilter from "./TaskListFilter";
-
+import TaskListFilter from './TaskListFilter'
 
 const TaskListHeader: React.FC = () => {
-  const { filter, setFilter } = useTaskStore();
-  const [localQuery, setLocalQuery] = useState<filterSchemaType>(filter);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const { filter, setFilter } = useTaskStore()
+  const [localQuery, setLocalQuery] = useState<filterSchemaType>(filter)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
-  const { mutate: createTaskMutation, isPending } = useCreateTask();
+  const { mutate: createTaskMutation, isPending } = useCreateTask()
 
-  const [debouncedQuery] = useDebounce(localQuery, 500);
-
-  useEffect(() => {
-    setFilter(debouncedQuery);
-  }, [debouncedQuery, setFilter]);
+  const [debouncedQuery] = useDebounce(localQuery, 500)
 
   useEffect(() => {
-    setLocalQuery(filter);
-  }, [filter]);
+    setFilter(debouncedQuery)
+  }, [debouncedQuery, setFilter])
+
+  useEffect(() => {
+    setLocalQuery(filter)
+  }, [filter])
 
   const handleChange = (
     key: keyof filterSchemaType,
-    value: string | boolean | undefined
+    value: string | boolean | undefined,
   ) => {
-    setLocalQuery((prevQuery) => {
-      const newQuery = { ...prevQuery, [key]: value };
+    setLocalQuery(prevQuery => {
+      const newQuery = { ...prevQuery, [key]: value }
 
-      if (key === "user") {
-        if (value === "__assigned_to_me__") {
-          newQuery.user = undefined;
-          newQuery.assigned_to_me = true;
+      if (key === 'user') {
+        if (value === '__assigned_to_me__') {
+          newQuery.user = undefined
+          newQuery.assigned_to_me = true
         } else if (value !== undefined) {
-          newQuery.assigned_to_me = undefined;
+          newQuery.assigned_to_me = undefined
         } else {
-          newQuery.assigned_to_me = undefined;
+          newQuery.assigned_to_me = undefined
         }
-      } else if (key === "assigned_to_me" && value === true) {
-        newQuery.user = undefined;
+      } else if (key === 'assigned_to_me' && value === true) {
+        newQuery.user = undefined
       }
-      return newQuery;
-    });
-  };
+      return newQuery
+    })
+  }
 
   const handleCreateSuccess = (data: TaskFormValues) => {
-    createTaskMutation(data);
-    setIsCreateModalOpen(false);
-  };
+    createTaskMutation(data)
+    setIsCreateModalOpen(false)
+  }
 
   return (
     <div className="w-full flex items-center justify-end gap-2">
       <Input
-        value={localQuery.search || ""}
+        value={localQuery.search || ''}
         placeholder="Search"
         className="max-w-sm"
-        onChange={(e) => handleChange("search", e.target.value)}
+        onChange={e => handleChange('search', e.target.value)}
       />
       <UserEmailSelect
         value={localQuery.user}
-        onValueChange={(val) => handleChange("user", val)}
+        onValueChange={val => handleChange('user', val)}
       />
       <TaskListFilter
         priority={localQuery.priority}
@@ -101,7 +100,7 @@ const TaskListHeader: React.FC = () => {
         </DialogContent>
       </Dialog>
     </div>
-  );
-};
+  )
+}
 
-export default TaskListHeader;
+export default TaskListHeader

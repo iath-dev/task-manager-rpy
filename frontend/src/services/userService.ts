@@ -1,34 +1,36 @@
-import type { PaginatedResponse } from "@/interfaces/pagination";
-import type { User } from "@/interfaces/user";
-import type { Role } from "@/lib/constants";
-import type { UserFormValues } from "@/schemas/user";
+import type { PaginatedResponse } from '@/interfaces/pagination'
+import type { User } from '@/interfaces/user'
+import type { Role } from '@/lib/constants'
+import type { CreateUserValues, UpdateUserValues } from '@/schemas/user'
 
-import apiClient from "./api";
-
+import apiClient from './api'
 
 export interface UserFilterValues {
-  search: string;
-  role?: Role;
-  sortBy?: SortOptionsType;
+  search: string
+  role?: Role
+  sortBy?: SortOptions
 }
 
-export type SortOptionsType =
-  | "full_name_asc"
-  | "full_name_desc"
-  | "email_asc"
-  | "email_desc";
+export const SORT_OPTIONS = [
+  'full_name_asc',
+  'full_name_desc',
+  'email_asc',
+  'email_desc',
+] as const
+
+export type SortOptions = (typeof SORT_OPTIONS)[number]
 
 export async function getUsersEmails() {
-  const res = await apiClient.get<string[]>("/users/emails");
-  return res;
+  const res = await apiClient.get<string[]>('/users/emails')
+  return res
 }
 
 export async function getUsers(
   page = 1,
   pageSize = 10,
-  filter: UserFilterValues
+  filter: UserFilterValues,
 ) {
-  const res = await apiClient.get<PaginatedResponse<User>>("/users", {
+  const res = await apiClient.get<PaginatedResponse<User>>('/users', {
     params: {
       page,
       page_size: pageSize,
@@ -36,14 +38,19 @@ export async function getUsers(
       role: filter.role,
       sort_by: filter.sortBy,
     },
-  });
-  return res.data;
+  })
+  return res.data
 }
 
 export const updateUser = async (
   uid: number,
-  payload: UserFormValues
+  payload: UpdateUserValues,
 ): Promise<User> => {
-  const { data } = await apiClient.put(`/users/${uid}`, payload);
-  return data;
-};
+  const { data } = await apiClient.put(`/users/${uid}`, payload)
+  return data
+}
+
+export const createUser = async (payload: CreateUserValues): Promise<User> => {
+  const { data } = await apiClient.post('/users', payload)
+  return data
+}
