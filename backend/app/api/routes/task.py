@@ -1,9 +1,11 @@
 
+from typing import List
 from fastapi import HTTPException, status, Depends, APIRouter
 from sqlalchemy.orm import Session
 
-from app.schemas.task import TaskCreate, TaskUpdate, TaskOut, PriorityEnum, TaskPage, TaskStatistics, TaskQueryParams
-from app.services import task_service
+from app.schemas.task import TaskCreate, TaskUpdate, TaskOut, TaskPage, TaskStatistics, TaskQueryParams
+from app.schemas.comment import CommentCreate, Comment
+from app.services import task_service, comment_service
 from app.api.deps import get_db, get_current_user
 from app.db.models.user import User
 
@@ -53,3 +55,26 @@ def delete_task(task_id: int, db: Session = Depends(get_db), current_user: User 
     if db_task is None:
         raise HTTPException(status_code=404, detail="Task not found")
     return
+
+@router.post("/{task_id}/comments", response_model=Comment, status_code=status.HTTP_201_CREATED)
+def create_comment_for_task(
+    task_id: int,
+    comment: CommentCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    db_task = task_service.get_task(db, task_id=task_id, user=current_user)
+    if db_task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return comment_service.create_comment(db=db, comment=comment, task_id=task_id, owner=current_user)
+
+@router.get("/{task_id}/comments", response_model=List[Comment], status_code=status.HTTP_200_OK)
+def get_comment_for_task(
+    task_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    db_task = task_service.get_task(db, task_id=task_id, user=current_user)
+    if db_task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return comment_service.get_comment(db=db, task_id=task_id, owner=current_user)

@@ -1,8 +1,9 @@
 import pytest
-from typing import Generator, Dict
+from typing import Generator, Dict, Any
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.engine import Engine
 
 from app.main import app
 from app.db.base import Base
@@ -13,12 +14,21 @@ from app.services import user_service
 from app.core.security import create_access_token
 from app.db.models.user import User
 
+
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+@event.listens_for(Engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
+
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -74,11 +84,11 @@ def admin_user(db_session: Session) -> User:
     return user_service.get_user_by_email(db_session, "admin@example.com")
 
 @pytest.fixture(scope="function")
-def test_user_token_headers(test_user: User) -> Dict[str, str]:
+def test_user_token_headers(test_user: User) -> Dict[str, Any]:
     token = create_access_token(user_id=test_user.id, email=test_user.email, role=test_user.role)
-    return {"Authorization": f"Bearer {token}"}
+    return {"Authorization": f"Bearer {token}", "user_id": str(test_user.id)}
 
 @pytest.fixture(scope="function")
-def admin_user_token_headers(admin_user: User) -> Dict[str, str]:
+def admin_user_token_headers(admin_user: User) -> Dict[str, Any]:
     token = create_access_token(user_id=admin_user.id, email=admin_user.email, role=admin_user.role)
-    return {"Authorization": f"Bearer {token}"}
+    return {"Authorization": f"Bearer {token}", "user_id": str(admin_user.id)}

@@ -1,5 +1,5 @@
 
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Enum as SQLAlchemyEnum
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Enum as SQLAlchemyEnum, Text
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import enum
@@ -17,7 +17,7 @@ class Task(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     title = Column(String(100), nullable=False)
-    description = Column(String(255), nullable=True)
+    description = Column(Text, nullable=True)
     completed = Column(Boolean, default=False)
     due_date = Column(DateTime, nullable=True)
     priority = Column(SQLAlchemyEnum(PriorityEnum), default=PriorityEnum.medium)
@@ -30,3 +30,4 @@ class Task(Base):
 
     created_by = relationship("User", foreign_keys=[created_by_id], back_populates="tasks_created")
     assigned_to = relationship("User", foreign_keys=[assigned_to_id], back_populates="tasks_assigned")
+    comments = relationship("Comment", back_populates="task", cascade="all, delete-orphan")

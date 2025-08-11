@@ -1,10 +1,9 @@
-
 from pydantic import BaseModel, Field
 from datetime import datetime
 from enum import Enum
 from typing import Optional, Literal
 
-from app.schemas.user import UserOut, UserOutPublic
+from app.schemas.user import UserOutPublic
 
 class PriorityEnum(str, Enum):
     high = "high"
