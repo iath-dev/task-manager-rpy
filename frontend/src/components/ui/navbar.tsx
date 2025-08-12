@@ -1,38 +1,38 @@
-import { Menu, Moon, Sun, SunMoon } from "lucide-react"; // Assuming lucide-react is installed
-import { Link, useNavigate } from "react-router";
+import { LogOut, Menu, Moon, Sun, SunMoon } from 'lucide-react' // Assuming lucide-react is installed
+import { Link, useNavigate } from 'react-router'
 
-import logo from "@/assets/logo.svg";
-import { useTheme } from "@/hooks/useTheme";
-import { useAuthStore } from "@/store/authStore";
-import { useSidebarStore } from "@/store/sidebarStore";
+import logo from '@/assets/logo.svg'
+import { useTheme } from '@/hooks/useTheme'
+import { useAuthStore } from '@/store/authStore'
+import { useSidebarStore } from '@/store/sidebarStore'
 
-import { Button } from "./button";
+import { Button } from './button'
 
 export const Navbar = () => {
-  const { theme, setTheme } = useTheme();
-  const { logout } = useAuthStore();
-  const { toggle } = useSidebarStore();
-  const navigation = useNavigate();
+  const { theme, setTheme } = useTheme()
+  const { logout } = useAuthStore()
+  const { toggle } = useSidebarStore()
+  const navigation = useNavigate()
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+    setTheme(theme === 'dark' ? 'light' : 'dark')
+  }
 
   const handleLogout = () => {
-    logout();
-    navigation("/auth");
-  };
+    logout()
+    navigation('/auth')
+  }
 
   const getIcon = () => {
     switch (theme) {
-      case "system":
-        return <SunMoon />;
-      case "dark":
-        return <Moon />;
-      case "light":
-        return <Sun />;
+      case 'system':
+        return <SunMoon />
+      case 'dark':
+        return <Moon />
+      case 'light':
+        return <Sun />
     }
-  };
+  }
 
   return (
     <nav className="bg-background border-b-gray-200">
@@ -62,9 +62,11 @@ export const Navbar = () => {
           <Button size="icon" variant="ghost" onClick={toggleTheme}>
             {getIcon()}
           </Button>
-          <Button onClick={handleLogout}>Log Out</Button>
+          <Button onClick={handleLogout} size="icon">
+            <LogOut />
+          </Button>
         </div>
       </div>
     </nav>
-  );
-};
+  )
+}

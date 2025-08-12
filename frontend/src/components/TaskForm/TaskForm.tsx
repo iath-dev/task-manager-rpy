@@ -69,7 +69,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row gap-4 items-center">
             <FormField
               control={form.control}
               name="title"

@@ -71,7 +71,7 @@ const EditTaskDialog: React.FC = () => {
             <DrawerHeader className="text-left">
               <DrawerTitle>Edit Task</DrawerTitle>
             </DrawerHeader>
-            <ScrollArea className="max-h-[calc(100vh-25rem)] p-4">
+            <ScrollArea className="max-h-[calc(100vh-25rem)] p-4 overflow-y-auto">
               {editingTask && (
                 <div className="overflow-y-auto">
                   <TaskForm

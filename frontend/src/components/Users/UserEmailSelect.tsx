@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react'
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query'
 
-import { useAuth } from "@/hooks/useAuth";
-import { getUsersEmails } from "@/services/userService";
+import { useAuth } from '@/hooks/useAuth'
+import { getUsersEmails } from '@/services/userService'
 
-import { Button } from "../ui/button";
+import { Button } from '../ui/button'
 import {
   Command,
   CommandEmpty,
@@ -13,34 +13,34 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "../ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+} from '../ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 
 interface UserEmailSelectProps {
-  value: string | undefined;
-  onValueChange: (value: string | undefined) => void;
+  value: string | undefined
+  onValueChange: (value: string | undefined) => void
 }
 
 const UserEmailSelect: React.FC<UserEmailSelectProps> = ({
   value,
   onValueChange,
 }) => {
-  const { isAdmin } = useAuth();
+  const { isAdmin } = useAuth()
   const { data } = useQuery({
     enabled: isAdmin,
-    queryKey: ["emails"],
+    queryKey: ['emails'],
     queryFn: () => getUsersEmails(),
-  });
+  })
 
   const handleValueChange = (newValue: string) => {
-    onValueChange(newValue === value ? undefined : newValue);
-  };
+    onValueChange(newValue === value ? undefined : newValue)
+  }
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" role="combobox">
-          {value ? data?.data.find((u) => u === value) : "Filter by user"}
+          {value ? data?.data.find(u => u === value) : 'Filter by user'}
         </Button>
       </PopoverTrigger>
       <PopoverContent>
@@ -49,7 +49,7 @@ const UserEmailSelect: React.FC<UserEmailSelectProps> = ({
           <CommandList>
             <CommandEmpty>No user find</CommandEmpty>
             <CommandGroup>
-              {data?.data.map((email) => (
+              {data?.data.map(email => (
                 <CommandItem
                   key={`user-item-${email}`}
                   value={email}
@@ -63,7 +63,7 @@ const UserEmailSelect: React.FC<UserEmailSelectProps> = ({
         </Command>
       </PopoverContent>
     </Popover>
-  );
-};
+  )
+}
 
-export default UserEmailSelect;
+export default UserEmailSelect
