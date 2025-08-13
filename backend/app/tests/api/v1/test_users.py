@@ -24,7 +24,7 @@ def test_get_users_as_admin(client: TestClient, admin_user_token_headers: Dict[s
     assert "items" in data
     assert "total_items" in data
     assert "page" in data
-    assert "size" in data
+    assert "page_size" in data
     assert isinstance(data["items"], list)
     assert len(data["items"]) > 0
     # Check that the admin user is in the list

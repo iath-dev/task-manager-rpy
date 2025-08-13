@@ -1,34 +1,21 @@
 import pytest
 from typing import Generator, Dict, Any
+
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine, event
-from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.engine import Engine
+from sqlalchemy.orm import Session
+
+from app.core.config import settings
+
+settings.DATABASE_URL = "sqlite:///./test.db"
 
 from app.main import app
 from app.db.base import Base
 from app.api.deps import get_db
-from app.core.config import settings
 from app.schemas.user import UserCreate
 from app.services import user_service
 from app.core.security import create_access_token
 from app.db.models.user import User
-
-
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-@event.listens_for(Engine, "connect")
-def set_sqlite_pragma(dbapi_connection, connection_record):
-    cursor = dbapi_connection.cursor()
-    cursor.execute("PRAGMA foreign_keys=ON")
-    cursor.close()
-
+from app.db.session import engine, SessionLocal
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -40,13 +27,13 @@ def db_setup_and_teardown():
 
 @pytest.fixture(scope="session", autouse=True)
 def seed_users_data():
-    db = TestingSessionLocal()
+    db = SessionLocal()
     user_service.seed_users(db)
     db.close()
 
 def get_db_override():
     try:
-        db = TestingSessionLocal()
+        db = SessionLocal()
         yield db
     finally:
         db.rollback()
@@ -63,7 +50,7 @@ def client(db_session: Session) -> Generator[TestClient, None, None]:
 
 @pytest.fixture(scope="function")
 def db_session() -> Generator[Session, None, None]:
-    db = TestingSessionLocal()
+    db = SessionLocal()
     yield db
     db.close()
 
