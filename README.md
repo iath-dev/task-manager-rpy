@@ -30,8 +30,9 @@ Toda la aplicación se puede ejecutar fácilmente usando Docker Compose.
 ### Ejecutando la Aplicación
 
 1.  **Clona el repositorio:**
+
     ```bash
-    git clone <url-del-repositorio>
+    git clone https://github.com/iath-dev/task-manager-rpy.git
     cd task-manager
     ```
 
@@ -39,6 +40,7 @@ Toda la aplicación se puede ejecutar fácilmente usando Docker Compose.
     Crea un archivo `.env` en el directorio `backend`. Puedes copiar `backend/.env.example` a `backend/.env` y rellenar los valores requeridos.
 
 3.  **Construye y ejecuta los servicios:**
+
     ```bash
     docker-compose up --build -d
     ```
@@ -61,11 +63,11 @@ Esto creará un conjunto de usuarios con diferentes roles para que puedas probar
 
 Una vez que la base de datos ha sido poblada, puedes usar los siguientes usuarios para iniciar sesión. La contraseña para todos es `123456`.
 
-| Email                 | Contraseña | Rol      |
-| --------------------- | ---------- | -------- |
-| `admin@example.com`   | `123456`   | `ADMIN`  |
-| `super@example.com`   | `123456`   | `SUPER`  |
-| `user@example.com`    | `123456`   | `COMMON` |
+| Email               | Contraseña | Rol      |
+| ------------------- | ---------- | -------- |
+| `admin@example.com` | `123456`   | `ADMIN`  |
+| `super@example.com` | `123456`   | `SUPER`  |
+| `user@example.com`  | `123456`   | `COMMON` |
 
 ## Documentación de la API
 
@@ -115,13 +117,21 @@ erDiagram
 ## Pruebas (Testing)
 
 ### Backend
+
 Para ejecutar las pruebas del backend, usa el siguiente comando:
+
 ```bash
-docker-compose exec backend poetry run pytest
+cd ./backend
+```
+
+```bash
+poetry run pytest
 ```
 
 ### Frontend
+
 Las pruebas del frontend están implementadas con Cypress. Para ejecutar las pruebas, usa el siguiente comando:
+
 ```bash
-npm run cypress:open:component --prefix frontend
+npm run cypress:open:component
 ```
