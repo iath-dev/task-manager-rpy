@@ -1,106 +1,69 @@
-# Task Manager Backend
+# Backend - Task Manager API
 
-FastAPI project for task management.
+This is the backend for the Task Manager application, built with FastAPI and Poetry.
 
-## API Endpoints
+## Technologies Used
 
-### Authentication
+*   **Framework:** FastAPI
+*   **Language:** Python 3.11+
+*   **Dependency Management:** Poetry
+*   **Database:** PostgreSQL
+*   **ORM:** SQLAlchemy
+*   **Migrations:** Alembic
+*   **Authentication:** JWT (JSON Web Tokens)
 
-*   `POST /api/v1/auth/login`: User login.
-*   `POST /api/v1/auth/register`: User registration.
+## Project Structure
 
-### Tasks
-
-*   `GET /api/v1/tasks/`: Retrieve a list of tasks.
-    *   **Query Parameters:**
-        *   `page` (int, default: 1): Page number for pagination.
-        *   `page_size` (int, default: 10): Number of items per page.
-        *   `priority` (string, optional): Filter by task priority (e.g., `high`, `medium`, `low`).
-        *   `search` (string, optional): Search tasks by title (case-insensitive).
-        *   `user_email` (string, optional): Filter tasks by the email of the user who created or is assigned to the task (admin/super users only).
-        *   `assigned_to_me` (boolean, default: `false`): If `true`, filters tasks assigned to the current user.
-        *   `order_by` (string, default: `created_at`): Field to order tasks by (e.g., `id`, `title`, `due_date`, `priority`, `created_at`, `updated_at`).
-        *   `order_direction` (string, default: `desc`): Order direction (`asc` for ascending, `desc` for descending).
-*   `POST /api/v1/tasks/`: Create a new task.
-*   `PUT /api/v1/tasks/{id}`: Update an existing task.
-*   `DELETE /api/v1/tasks/{id}`: Delete a task.
-*   `GET /api/v1/tasks/statistics`: Get task statistics (total, completed, pending, and percentages).
-*   `POST /api/v1/tasks/{id}/comments`: Add a comment to a task (Planned).
-
-### Users
-
-*   `GET /api/v1/users/me`: Get current user's details.
-*   `GET /api/v1/users/{user_id}`: Get user by ID (admin only).
-*   `GET /api/v1/users/`: List all users (admin only).
-
-### Seed Data
-
-*   `POST /api/v1/seed/`: Seeds the database with initial user data (normal, admin, superuser). Password for all seeded users is `123456`.
+```
+backend/
+├── alembic/
+├── app/
+│   ├── api/
+│   ├── core/
+│   ├── db/
+│   ├── schemas/
+│   └── services/
+├── poetry.lock
+├── pyproject.toml
+└── README.md
+```
 
 ## Setup and Running
 
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository_url>
-    cd backend
-    ```
-2.  **Install Poetry:**
-    If you don't have Poetry installed, follow the instructions on their official website: [https://python-poetry.org/docs/#installation](https://python-poetry.org/docs/#installation)
-3.  **Install dependencies:**
+### Prerequisites
+
+*   Python 3.11+
+*   Poetry
+*   PostgreSQL
+
+### Local Development
+
+1.  **Install dependencies:**
+
     ```bash
     poetry install
     ```
-4.  **Environment Variables:**
-    Create a `.env` file in the `backend` directory based on `app/core/config.py`. You'll need to set up your PostgreSQL database credentials and a JWT secret key. Example:
-    ```
-    DATABASE_URL="postgresql://user:password@host:port/database_name"
-    SECRET_KEY="your_super_secret_jwt_key"
-    ALGORITHM="HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES=30
-    ```
-5.  **Run database migrations:**
-    Ensure your PostgreSQL database is running and accessible.
+
+2.  **Create a `.env` file:**
+
+    Copy the `.env.example` to `.env` and update the database URL and other settings.
+
+3.  **Run database migrations:**
+
     ```bash
     poetry run alembic upgrade head
     ```
-6.  **Run the application (development):**
-    ```bash
-    poetry run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-    ```
-    The API documentation (Swagger UI) will be available at `http://localhost:8000/docs`.
 
-## Testing
-
-To run the tests and generate a coverage report, use the following commands:
-
-1.  **Install development dependencies (if not already installed):**
+4.  **Run the development server:**
 
     ```bash
-    poetry install --with dev
+    poetry run uvicorn app.main:app --reload
     ```
 
-2.  **Run tests with coverage:**
+### Docker
 
-    ```bash
-    poetry run pytest --cov=app
-    ```
+Refer to the root `README.md` for instructions on how to run the application with Docker Compose.
 
-    This will execute all tests and display a coverage summary in the terminal. The current coverage is **93%**.
+## API Documentation
 
-    To generate a detailed HTML coverage report (useful for exploring coverage line by line):
-
-    ```bash
-    poetry run coverage html
-    ```
-
-    After running this command, open `htmlcov/index.html` in your browser to view the report.
-
-### Missing Features
-
-Here's a list of features that are planned but not yet implemented in the backend:
-
-- Real-time updates using WebSockets (Optional).
-- Notification system for upcoming task deadlines (Optional).
-- Rate limiting and CSRF protection.
-- Adding comments to a task endpoint (`POST /api/v1/tasks/{id}/comments`).
-- Achieve minimum 85% test coverage. (Achieved 93%)
+The API documentation is automatically generated by FastAPI and is available at `/docs` and `/redoc` when the backend is running.
