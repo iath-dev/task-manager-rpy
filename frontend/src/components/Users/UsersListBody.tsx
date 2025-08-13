@@ -60,49 +60,55 @@ const UserListContent: React.FC<UserListProps> = ({ users }) => {
           className="mt-4 space-y-3.5 max-h-72 overflow-y-auto"
           data-testid="users-list"
         >
-          {users.map(user => (
-            <li
-              key={user.id}
-              className="flex justify-between items-center"
-              data-testid={`users-list-${user.email}`}
-            >
-              <div className="flex flex-col gap-1">
-                <div className="flex gap-2 items-center">
-                  <h2
-                    className={cn(
-                      { 'text-muted-foreground': !user.is_active },
-                      'text-lg font-medium font-sans first-letter:uppercase',
-                    )}
-                  >
-                    {user.full_name}
-                  </h2>
-                  <Badge variant="outline" className="text-xs">
-                    {user.role}
-                  </Badge>
-                </div>
-                <div className="flex gap-2 items-center">
-                  <span className="text-xs text-muted-foreground font-mono tracking-tighter">
-                    Last access {dayjs(user.last_access).format('YYYY-MM-DD')}
-                  </span>
-                  {!user.is_active && (
-                    <span className="text-xs text-red-500 font-mono tracking-tighter">
-                      Inactive
+          {users.length === 0 ? (
+            <div className="w-full h-42 flex items-center justify-center">
+              <span className="text-muted-foreground">Users not found</span>
+            </div>
+          ) : (
+            users.map(user => (
+              <li
+                key={user.id}
+                className="flex justify-between items-center"
+                data-testid={`users-list-${user.email}`}
+              >
+                <div className="flex flex-col gap-1">
+                  <div className="flex gap-2 items-center">
+                    <h2
+                      className={cn(
+                        { 'text-muted-foreground': !user.is_active },
+                        'text-lg font-medium font-sans first-letter:uppercase',
+                      )}
+                    >
+                      {user.full_name}
+                    </h2>
+                    <Badge variant="outline" className="text-xs">
+                      {user.role}
+                    </Badge>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <span className="text-xs text-muted-foreground font-mono tracking-tighter">
+                      Last access {dayjs(user.last_access).format('YYYY-MM-DD')}
                     </span>
-                  )}
+                    {!user.is_active && (
+                      <span className="text-xs text-red-500 font-mono tracking-tighter">
+                        Inactive
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  data-testid="users-list-edit"
-                  onClick={() => handleEditTask(user)}
-                >
-                  <Edit3 />
-                </Button>
-              </div>
-            </li>
-          ))}
+                <div>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    data-testid="users-list-edit"
+                    onClick={() => handleEditTask(user)}
+                  >
+                    <Edit3 />
+                  </Button>
+                </div>
+              </li>
+            ))
+          )}
         </ul>
       </ScrollArea>
       <Dialog open={isEditModalOpen} onOpenChange={handleCloseEditModal}>

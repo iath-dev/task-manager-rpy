@@ -49,6 +49,10 @@ export const TaskList: React.FC = () => {
       <CardContent>
         {isLoading ? (
           <Skeleton className="w-full min-h-60" />
+        ) : tasks.length === 0 ? (
+          <div className="w-full h-42 flex items-center justify-center">
+            <span className="text-muted-foreground">Task not found</span>
+          </div>
         ) : (
           <TaskListBody tasks={tasks} onDeleteTask={handleDeleteTask} />
         )}
