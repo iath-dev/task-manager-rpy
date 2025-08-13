@@ -62,6 +62,8 @@ La API proporciona endpoints RESTful para gestionar tareas y usuarios, con auten
 
 ### Desarrollo Local
 
+**Nota:** El endpoint de seeding (`POST /api/v1/seed/`) utiliza el archivo `data/users.json` para poblar la base de datos con usuarios iniciales.
+
 1.  **Instalar dependencias:**
 
     ```bash
