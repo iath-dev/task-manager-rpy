@@ -25,7 +25,7 @@ def test_create_user_as_admin(client: TestClient, admin_user_token_headers: Dict
             "role": "COMMON"
         }
     )
-    assert response.status_code == HTTPStatus.OK
+    assert response.status_code == HTTPStatus.CREATED
     data = response.json()
     assert data["email"] == "newuser@example.com"
     assert data["full_name"] == "New User"

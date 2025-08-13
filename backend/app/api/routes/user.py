@@ -40,7 +40,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     """
     existing = user_service.get_user_by_email(db, user.email)
     if existing:
-        raise HTTPException(status_code=404, detail="couldn't create user")
+        raise HTTPException(status_code=409, detail="User with this email already exists")
     
     return user_service.create_user(db, user=user)
 
