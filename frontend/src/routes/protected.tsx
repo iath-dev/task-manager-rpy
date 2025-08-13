@@ -5,11 +5,11 @@ import { redirect, type RouteObject } from 'react-router-dom'
 import { authLoader, adminLoader } from '@/lib/loaders'
 import { Loader } from '@/components/ui/loader'
 
-const AdminPanelPage = lazy(() => import('@/pages/Admin/AdminPanelPage'))
+const AdminPanelPage = lazy(() => import('@/pages/admin/AdminPanelPage'))
 
 import { AppLayout } from '../layouts/AppLayout'
-import { DashboardPage } from '../pages/Dashboard'
-import { TaskListPage } from '../pages/Tasks/TaskList'
+import { DashboardPage } from '../pages/dashboard'
+import { TaskListPage } from '../pages/tasks/TaskList'
 
 export const protectedRoutes: RouteObject[] = [
   {

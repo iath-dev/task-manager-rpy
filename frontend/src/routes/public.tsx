@@ -1,10 +1,10 @@
-import { type RouteObject } from "react-router-dom";
+import { type RouteObject } from 'react-router-dom'
 
-import { LoginPage } from "@/pages/Auth/Login";
+import { LoginPage } from '@/pages/auth/Login'
 
 export const publicRoutes: RouteObject[] = [
   {
-    path: "/auth",
+    path: '/auth',
     element: <LoginPage />,
   },
-];
+]

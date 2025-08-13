@@ -4,12 +4,12 @@ Este es el frontend para la aplicación de gestión de tareas, construido con Re
 
 ## Tecnologías Utilizadas
 
-*   **Framework:** React 19
-*   **Lenguaje:** TypeScript
-*   **Herramienta de Construcción:** Vite
-*   **Estilos:** Tailwind CSS
-*   **Enrutamiento:** React Router DOM v6
-*   **Componentes de UI:** Shadcn
+- **Framework:** React 19
+- **Lenguaje:** TypeScript
+- **Herramienta de Construcción:** Vite
+- **Estilos:** Tailwind CSS
+- **Enrutamiento:** React Router DOM v6
+- **Componentes de UI:** Shadcn
 
 ## Estructura del Proyecto
 
@@ -38,8 +38,8 @@ frontend/
 
 ### Prerrequisitos
 
-*   Node.js
-*   npm
+- Node.js
+- npm
 
 ### Desarrollo Local
 

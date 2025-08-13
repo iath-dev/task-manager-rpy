@@ -25,7 +25,7 @@ import TaskListFilter from './TaskListFilter'
 
 const TaskListHeader: React.FC = () => {
   const { isAdmin } = useAuth()
-  const { filter, setFilter } = useTaskStore()
+  const { filter, setFilter, setPage } = useTaskStore()
   const [localQuery, setLocalQuery] = useState<filterSchemaType>(filter)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
@@ -34,6 +34,7 @@ const TaskListHeader: React.FC = () => {
   const [debouncedQuery] = useDebounce(localQuery, 500)
 
   useEffect(() => {
+    setPage(1)
     setFilter(debouncedQuery)
   }, [debouncedQuery, setFilter])
 
