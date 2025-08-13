@@ -39,12 +39,16 @@ const UserEmailSelect: React.FC<UserEmailSelectProps> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox">
+        <Button
+          variant="outline"
+          role="combobox"
+          data-testid="users-email-popover-button"
+        >
           {value ? data?.data.find(u => u === value) : 'Filter by user'}
         </Button>
       </PopoverTrigger>
       <PopoverContent>
-        <Command>
+        <Command data-testid="users-email-command">
           <CommandInput placeholder="Filter by user" />
           <CommandList>
             <CommandEmpty>No user find</CommandEmpty>
@@ -52,6 +56,7 @@ const UserEmailSelect: React.FC<UserEmailSelectProps> = ({
               {data?.data.map(email => (
                 <CommandItem
                   key={`user-item-${email}`}
+                  data-testid={`user-item-${email}`}
                   value={email}
                   onSelect={handleValueChange}
                 >

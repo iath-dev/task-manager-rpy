@@ -42,10 +42,17 @@ const CommentList: React.FC = () => {
     <div>
       <h1 className="text-xl mb-4">Comments</h1>
       <ScrollArea>
-        <ul className="max-h-36">
+        <ul className="max-h-36" data-testid="comments-list">
           {data.map(comment => (
-            <li key={comment.id} className="mb-2 p-2 border rounded">
-              <p className="text-sm font-mono tracking-tighter text-muted-foreground">
+            <li
+              key={comment.id}
+              data-testid={`comment-${comment.id}`}
+              className="mb-2 p-2 border rounded"
+            >
+              <p
+                data-testid={`comment-${comment.id}-content`}
+                className="text-sm font-mono tracking-tighter text-muted-foreground"
+              >
                 {comment.content}
               </p>
               <span className="w-full flex items-center justify-end gap-2">

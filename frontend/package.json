@@ -8,8 +8,14 @@
     "build": "tsc -b && vite build",
     "lint": "eslint . && prettier --check .",
     "format": "npx prettier --write .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cypress:open:component": "cypress open --component"
   },
+  "references": [
+    {
+      "path": "./tsconfig.cypress.json"
+    }
+  ],
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
     "@loadable/component": "^5.16.7",
@@ -45,12 +51,15 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
+    "@types/cypress": "^0.1.6",
     "@types/node": "^24.2.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react-swc": "^3.10.2",
+    "cypress": "^14.5.4",
     "eslint": "^9.30.1",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-cypress": "^5.1.0",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
@@ -58,6 +67,6 @@
     "tw-animate-css": "^1.3.6",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
-    "vite": "^7.0.4"
+    "vite": "^6.0.0"
   }
 }

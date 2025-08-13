@@ -30,7 +30,7 @@ import { useAuth } from '../../hooks/useAuth'
 import UserEmailSelect from '../Users/UserEmailSelect'
 import CommentList from '../Comments/CommentsList'
 
-interface TaskFormProps {
+export interface TaskFormProps {
   defaultValues?: Partial<TaskFormValues>
   onSubmit: (values: TaskFormValues) => void
   isPending: boolean
@@ -68,7 +68,11 @@ const TaskForm: React.FC<TaskFormProps> = ({
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4"
+          data-testid="task-form"
+        >
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <FormField
               control={form.control}

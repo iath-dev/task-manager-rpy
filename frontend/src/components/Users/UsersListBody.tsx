@@ -56,9 +56,16 @@ const UserListContent: React.FC<UserListProps> = ({ users }) => {
   return (
     <>
       <ScrollArea className="min-h-36 max-h-72 whitespace-nowrap">
-        <ul className="mt-4 space-y-3.5 max-h-72 overflow-y-auto">
+        <ul
+          className="mt-4 space-y-3.5 max-h-72 overflow-y-auto"
+          data-testid="users-list"
+        >
           {users.map(user => (
-            <li key={user.id} className="flex justify-between items-center">
+            <li
+              key={user.id}
+              className="flex justify-between items-center"
+              data-testid={`users-list-${user.email}`}
+            >
               <div className="flex flex-col gap-1">
                 <div className="flex gap-2 items-center">
                   <h2
@@ -88,6 +95,7 @@ const UserListContent: React.FC<UserListProps> = ({ users }) => {
                 <Button
                   size="icon"
                   variant="ghost"
+                  data-testid="users-list-edit"
                   onClick={() => handleEditTask(user)}
                 >
                   <Edit3 />
@@ -100,15 +108,17 @@ const UserListContent: React.FC<UserListProps> = ({ users }) => {
       <Dialog open={isEditModalOpen} onOpenChange={handleCloseEditModal}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit Task</DialogTitle>
+            <DialogTitle data-testid="user-form-dialog-title">
+              Edit Task
+            </DialogTitle>
           </DialogHeader>
           <UserForm
             defaultValues={{
               email: editUser?.email || '',
               password: '',
               full_name: editUser?.full_name || '',
-              role: editUser?.role || undefined,
-              is_active: editUser?.is_active || undefined,
+              role: editUser?.role ?? 'COMMON',
+              is_active: editUser?.is_active ?? true,
             }}
             isEditMode
             isPending={isPending}

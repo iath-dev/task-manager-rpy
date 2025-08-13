@@ -32,10 +32,11 @@ const TaskListBody: React.FC<TaskListBodyProps> = ({ tasks, onDeleteTask }) => {
 
   return (
     <ScrollArea className="min-h-36 max-h-72 whitespace-nowrap">
-      <ul className="w-full max-h-72 space-y-3.5">
+      <ul className="w-full max-h-72 space-y-3.5" data-testid="task-list-body">
         {tasks.map(task => (
           <li
             key={`task-item-${task.id}`}
+            data-testid={`task-list-${task.id}`}
             className="flex items-center justify-between"
           >
             <div className="flex flex-col gap-2">
@@ -67,6 +68,7 @@ const TaskListBody: React.FC<TaskListBodyProps> = ({ tasks, onDeleteTask }) => {
               <Button
                 variant="ghost"
                 size="icon"
+                data-testid="task-item-delete"
                 onClick={() => onDeleteTask(task.id)}
               >
                 <Trash />
@@ -74,6 +76,7 @@ const TaskListBody: React.FC<TaskListBodyProps> = ({ tasks, onDeleteTask }) => {
               <Button
                 variant="outline"
                 size="icon"
+                data-testid="task-item-edit"
                 onClick={() => setEditingTask(task)}
               >
                 <Edit />

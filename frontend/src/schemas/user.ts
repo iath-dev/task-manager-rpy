@@ -5,8 +5,8 @@ import { ROLES } from '@/lib/constants'
 export const baseUserSchema = z.object({
   full_name: z.string().min(1, 'Full name is required'),
   email: z.string().email('Invalid email format'),
-  role: z.enum(ROLES).optional(),
-  is_active: z.boolean().optional(),
+  role: z.enum(ROLES).default('COMMON'),
+  is_active: z.boolean().default(true),
 })
 
 export type BaseUserValues = z.infer<typeof baseUserSchema>

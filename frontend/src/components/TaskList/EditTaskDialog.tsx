@@ -97,7 +97,9 @@ const EditTaskDialog: React.FC = () => {
             </ScrollArea>
             <DrawerFooter className="pt-2">
               <DrawerClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline" data-testid="edit-dialog-cancel">
+                  Cancel
+                </Button>
               </DrawerClose>
             </DrawerFooter>
           </div>

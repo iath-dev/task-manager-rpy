@@ -29,8 +29,9 @@ import {
   SelectValue,
 } from '../ui/select'
 import { Switch } from '../ui/switch'
+import { ROLES } from '@/lib/constants'
 
-interface UserFormProps {
+export interface UserFormProps {
   defaultValues?: CreateUserValues | UpdateUserValues
   isPending?: boolean
   isEditMode?: boolean
@@ -45,8 +46,8 @@ const UserForm: React.FC<UserFormProps> = ({
 }) => {
   const schema = isEditMode ? updateUserSchema : createUserSchema
 
-  const form = useForm<CreateUserValues | UpdateUserValues>({
-    resolver: zodResolver(schema),
+  const form = useForm<UpdateUserValues | CreateUserValues>({
+    resolver: zodResolver(schema) as any,
     defaultValues: {
       ...defaultValues,
     },
@@ -127,20 +128,33 @@ const UserForm: React.FC<UserFormProps> = ({
               control={form.control}
               name="role"
               render={({ field }) => (
-                <FormItem>
+                <FormItem data-testid="user-form-select">
                   <FormLabel>Role</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select an role" />
+                      <SelectTrigger
+                        data-testid="role-select"
+                        className="w-full"
+                      >
+                        <SelectValue
+                          defaultValue={'COMMON'}
+                          placeholder="Select an role"
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="ADMIN">Admin</SelectItem>
-                      <SelectItem value="COMMON">Common</SelectItem>
+                      {ROLES.flatMap(role => (
+                        <SelectItem
+                          key={`role-option-${role}`}
+                          data-testid={`role-option-${role}`}
+                          value={role}
+                        >
+                          {role}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -167,7 +181,12 @@ const UserForm: React.FC<UserFormProps> = ({
             )}
           </div>
         </div>
-        <Button type="submit" disabled={isPending} className="ml-auto">
+        <Button
+          type="submit"
+          disabled={isPending}
+          className="ml-auto"
+          data-testid="user-form-submit"
+        >
           {isPending ? 'Saving...' : 'Save changes'}
         </Button>
       </form>

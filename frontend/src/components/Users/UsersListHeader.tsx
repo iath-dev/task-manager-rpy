@@ -84,7 +84,10 @@ const UsersListHeader: React.FC<UsersListHeaderProps> = ({
   }, [debounceSearch, sortBy, role, onFilterChange])
 
   return (
-    <section className="flex flex-col md:flex-row items-center justify-end gap-2">
+    <section
+      className="flex flex-col md:flex-row items-center justify-end gap-2"
+      data-testid="user-list-header"
+    >
       <Input
         value={search}
         placeholder="Search by name"
@@ -134,7 +137,11 @@ const UsersListHeader: React.FC<UsersListHeaderProps> = ({
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline" size="icon">
+            <Button
+              variant="outline"
+              size="icon"
+              data-testid="user-list-header-add"
+            >
               <PlusCircle />
             </Button>
           </DialogTrigger>

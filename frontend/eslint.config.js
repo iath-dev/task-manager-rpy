@@ -1,11 +1,12 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
-import tseslint from 'typescript-eslint';
-import { globalIgnores } from 'eslint/config';
-import importPlugin from 'eslint-plugin-import';
-import prettierConfig from 'eslint-config-prettier';
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import tseslint from 'typescript-eslint'
+import { globalIgnores } from 'eslint/config'
+import importPlugin from 'eslint-plugin-import'
+import prettierConfig from 'eslint-config-prettier'
+import cypressPlugin from 'eslint-plugin-cypress'
 
 export default tseslint.config([
   globalIgnores(['dist']),
@@ -30,9 +31,12 @@ export default tseslint.config([
         tsconfigRootDir: import.meta.dirname,
       },
     },
+    parserOptions: {
+      project: false,
+    },
     rules: {
       // Essential Best Practices
-      'eqeqeq': ['error', 'always'],
+      eqeqeq: ['error', 'always'],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'no-debugger': 'error',
 
@@ -41,7 +45,7 @@ export default tseslint.config([
       'import/order': [
         'error',
         {
-          'groups': [
+          groups: [
             'builtin',
             'external',
             'internal',
@@ -51,7 +55,7 @@ export default tseslint.config([
             'object',
             'type',
           ],
-          'pathGroups': [
+          pathGroups: [
             // React imports first
             {
               pattern: 'react',
@@ -65,11 +69,21 @@ export default tseslint.config([
               position: 'after',
             },
           ],
-          'pathGroupsExcludedImportTypes': ['react'], // Exclude 'react' from other groups
+          pathGroupsExcludedImportTypes: ['react'], // Exclude 'react' from other groups
           'newlines-between': 'always',
-          
         },
       ],
+    },
+  },
+  {
+    // Configuration for Cypress test files
+    files: ['cypress/**/*.{ts,tsx}', 'src/**/*.cy.{ts,tsx}'],
+    plugins: {
+      cypress: cypressPlugin,
+    },
+    extends: [cypressPlugin.configs.recommended],
+    languageOptions: {
+      globals: globals.merge(globals.browser, globals.cypress),
     },
   },
   {
@@ -83,4 +97,4 @@ export default tseslint.config([
       },
     },
   },
-]);
+])

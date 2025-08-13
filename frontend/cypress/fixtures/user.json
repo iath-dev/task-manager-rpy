@@ -1,0 +1,8 @@
+{
+  "email": "admin@example.com",
+  "full_name": "Admin user",
+  "id": 0,
+  "role": "ADMIN",
+  "last_access": "string",
+  "is_active": true
+}

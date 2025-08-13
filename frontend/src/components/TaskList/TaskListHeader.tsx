@@ -14,6 +14,7 @@ import { useCreateTask } from '@/hooks/useTasks'
 import type { filterSchemaType } from '@/schemas/query'
 import type { TaskFormValues } from '@/schemas/task'
 import { useTaskStore } from '@/store/taskStore'
+import { useAuth } from '@/hooks/useAuth'
 
 import TaskForm from '../TaskForm/TaskForm'
 import { Button } from '../ui/button'
@@ -23,6 +24,7 @@ import UserEmailSelect from '../Users/UserEmailSelect'
 import TaskListFilter from './TaskListFilter'
 
 const TaskListHeader: React.FC = () => {
+  const { isAdmin } = useAuth()
   const { filter, setFilter } = useTaskStore()
   const [localQuery, setLocalQuery] = useState<filterSchemaType>(filter)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
@@ -75,10 +77,12 @@ const TaskListHeader: React.FC = () => {
         className="max-w-sm"
         onChange={e => handleChange('search', e.target.value)}
       />
-      <UserEmailSelect
-        value={localQuery.user}
-        onValueChange={val => handleChange('user', val)}
-      />
+      {isAdmin && (
+        <UserEmailSelect
+          value={localQuery.user}
+          onValueChange={val => handleChange('user', val)}
+        />
+      )}
       <TaskListFilter
         priority={localQuery.priority}
         sort_by={localQuery.sort_by}
@@ -88,7 +92,11 @@ const TaskListHeader: React.FC = () => {
 
       <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="icon">
+          <Button
+            variant="outline"
+            size="icon"
+            data-testid="create-task-button"
+          >
             <PlusCircle />
           </Button>
         </DialogTrigger>

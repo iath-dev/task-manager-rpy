@@ -42,7 +42,7 @@ export const TaskList: React.FC = () => {
   )
 
   return (
-    <Card className="w-full">
+    <Card className="w-full" data-testid="task-list-card">
       <CardHeader>
         <TaskListHeader />
       </CardHeader>
