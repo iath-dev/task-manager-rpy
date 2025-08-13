@@ -1,0 +1,45 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Poetry
+poetry.lock
+
+# Environments
+.env
+.venv/
+venv/
+ENV/
+env/
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+.cache
+
+# Mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# VSCode / IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+
+# Build
+build/
+dist/
+*.egg-info*
+
+# Docker
+
+postgres_data/

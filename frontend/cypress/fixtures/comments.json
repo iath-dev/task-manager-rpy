@@ -1,0 +1,35 @@
+[
+  {
+    "content": "This is the first comment.",
+    "id": 1,
+    "task_id": 101,
+    "owner": {
+      "email": "admin@example.com",
+      "full_name": "Admin User",
+      "id": 1
+    },
+    "created_at": "2024-06-10T10:00:00Z"
+  },
+  {
+    "content": "Second comment for the task.",
+    "id": 2,
+    "task_id": 101,
+    "owner": {
+      "email": "user@example.com",
+      "full_name": "Common User",
+      "id": 2
+    },
+    "created_at": "2024-06-10T11:00:00Z"
+  },
+  {
+    "content": "Another comment from admin.",
+    "id": 3,
+    "task_id": 102,
+    "owner": {
+      "email": "admin@example.com",
+      "full_name": "Admin User",
+      "id": 1
+    },
+    "created_at": "2024-06-10T12:00:00Z"
+  }
+]

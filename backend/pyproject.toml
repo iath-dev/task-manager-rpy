@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = ["Daniel Develop <57878266+iath-dev@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{ include = "app" }]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<4.0"
+fastapi = "^0.116.1"
+uvicorn = { extras = ["standard"], version = "^0.35.0" }
+pydantic = {extras = ["email"], version = "^2.11.7"}
+python-dotenv = "^1.1.1"
+sqlalchemy = "^2.0.42"
+psycopg2-binary = "^2.9.10"
+python-jose = { extras = ["cryptography"], version = "^3.5.0" }
+passlib = { extras = ["bcrypt"], version = "^1.7.4" }
+pydantic-settings = "^2.10.1"
+alembic = "^1.16.4"
+python-multipart = "^0.0.20"
+loguru = "^0.7.3"
+slowapi = "^0.1.9"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.1"
+httpx = "^0.28.1"
+pytest-cov = "^6.2.1"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

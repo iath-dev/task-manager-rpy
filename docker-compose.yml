@@ -1,0 +1,48 @@
+name: task-manage-rpy
+
+services:
+  backend:
+    build: ./backend
+    container_name: fastapi-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/task_db
+      - SECRET_KEY=doZIgL8egh3mL1 # ¡IMPORTANTE! Cambia esto por una clave segura
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build: ./frontend
+    container_name: react-frontend
+    ports:
+      - "80:80" # Puerto estándar para Nginx
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_BASE_URL=http://backend:8000/api/v1 # Comunicación entre contenedores
+
+  db:
+    image: postgres:15
+    container_name: postgres-db
+    ports:
+      - "5432:5432"
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d task_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_DB: task_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

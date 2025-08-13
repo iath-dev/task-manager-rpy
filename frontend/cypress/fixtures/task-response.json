@@ -1,0 +1,129 @@
+
+{
+  "items": [
+    {
+      "id": 1,
+      "title": "Configurar el entorno de desarrollo",
+      "description": "Instalar todas las dependencias necesarias y configurar la base de datos.",
+      "due_date": "2024-08-15T23:59:59Z",
+      "priority": "high",
+      "created_by": { "id": 1, "username": "admin", "email": "admin@example.com" },
+      "assigned_to": { "id": 2, "username": "developer1", "email": "dev1@example.com" },
+      "created_at": "2024-08-10T10:00:00Z",
+      "updated_at": "2024-08-10T11:30:00Z",
+      "completed": true
+    },
+    {
+      "id": 2,
+      "title": "Diseñar la arquitectura de la base de datos",
+      "description": "Crear el diagrama entidad-relación y definir los esquemas de las tablas.",
+      "due_date": "2024-08-18T23:59:59Z",
+      "priority": "high",
+      "created_by": { "id": 1, "username": "admin", "email": "admin@example.com" },
+      "assigned_to": { "id": 3, "username": "developer2", "email": "dev2@example.com" },
+      "created_at": "2024-08-11T12:00:00Z",
+      "updated_at": "2024-08-11T12:00:00Z",
+      "completed": false
+    },
+    {
+      "id": 3,
+      "title": "Desarrollar la autenticación de usuarios",
+      "description": "Implementar el registro y login de usuarios con JWT.",
+      "due_date": "2024-08-20T23:59:59Z",
+      "priority": "medium",
+      "created_by": { "id": 2, "username": "developer1", "email": "dev1@example.com" },
+      "assigned_to": { "id": 2, "username": "developer1", "email": "dev1@example.com" },
+      "created_at": "2024-08-12T14:00:00Z",
+      "updated_at": "2024-08-12T14:00:00Z",
+      "completed": false
+    },
+    {
+      "id": 4,
+      "title": "Crear los endpoints del CRUD de tareas",
+      "description": "Desarrollar las rutas de la API para crear, leer, actualizar y eliminar tareas.",
+      "due_date": "2024-08-22T23:59:59Z",
+      "priority": "high",
+      "created_by": { "id": 3, "username": "developer2", "email": "dev2@example.com" },
+      "assigned_to": { "id": 3, "username": "developer2", "email": "dev2@example.com" },
+      "created_at": "2024-08-13T16:00:00Z",
+      "updated_at": "2024-08-13T16:00:00Z",
+      "completed": true
+    },
+    {
+      "id": 5,
+      "title": "Diseñar la interfaz de usuario del dashboard",
+      "description": "Crear los mockups y el diseño visual para el panel principal.",
+      "due_date": "2024-08-19T23:59:59Z",
+      "priority": "medium",
+      "created_by": { "id": 1, "username": "admin", "email": "admin@example.com" },
+      "assigned_to": { "id": 4, "username": "designer", "email": "designer@example.com" },
+      "created_at": "2024-08-14T18:00:00Z",
+      "updated_at": "2024-08-14T18:00:00Z",
+      "completed": false
+    },
+    {
+      "id": 6,
+      "title": "Implementar la vista de lista de tareas en React",
+      "description": "Desarrollar el componente de React para mostrar las tareas.",
+      "due_date": "2024-08-25T23:59:59Z",
+      "priority": "low",
+      "created_by": { "id": 2, "username": "developer1", "email": "dev1@example.com" },
+      "assigned_to": { "id": 2, "username": "developer1", "email": "dev1@example.com" },
+      "created_at": "2024-08-15T20:00:00Z",
+      "updated_at": "2024-08-15T20:00:00Z",
+      "completed": false
+    },
+    {
+      "id": 7,
+      "title": "Escribir pruebas unitarias para el backend",
+      "description": "Asegurar una cobertura de código de al menos el 85% para la API.",
+      "due_date": "2024-08-28T23:59:59Z",
+      "priority": "medium",
+      "created_by": { "id": 3, "username": "developer2", "email": "dev2@example.com" },
+      "assigned_to": { "id": 3, "username": "developer2", "email": "dev2@example.com" },
+      "created_at": "2024-08-16T22:00:00Z",
+      "updated_at": "2024-08-16T22:00:00Z",
+      "completed": false
+    },
+    {
+      "id": 8,
+      "title": "Configurar el pipeline de CI/CD",
+      "description": "Automatizar el proceso de build y despliegue con GitHub Actions.",
+      "due_date": "2024-08-30T23:59:59Z",
+      "priority": "high",
+      "created_by": { "id": 1, "username": "admin", "email": "admin@example.com" },
+      "assigned_to": { "id": 1, "username": "admin", "email": "admin@example.com" },
+      "created_at": "2024-08-17T09:00:00Z",
+      "updated_at": "2024-08-17T09:00:00Z",
+      "completed": false
+    },
+    {
+      "id": 9,
+      "title": "Realizar pruebas de integración",
+      "description": "Verificar que el frontend y el backend se comunican correctamente.",
+      "due_date": "2024-09-02T23:59:59Z",
+      "priority": "medium",
+      "created_by": { "id": 2, "username": "developer1", "email": "dev1@example.com" },
+      "assigned_to": { "id": 3, "username": "developer2", "email": "dev2@example.com" },
+      "created_at": "2024-08-18T11:00:00Z",
+      "updated_at": "2024-08-18T11:00:00Z",
+      "completed": false
+    },
+    {
+      "id": 10,
+      "title": "Preparar la documentación del proyecto",
+      "description": "Escribir el README y la documentación de la API.",
+      "due_date": "2024-09-05T23:59:59Z",
+      "priority": "low",
+      "created_by": { "id": 1, "username": "admin", "email": "admin@example.com" },
+      "assigned_to": { "id": 4, "username": "designer", "email": "designer@example.com" },
+      "created_at": "2024-08-19T13:00:00Z",
+      "updated_at": "2024-08-19T13:00:00Z",
+      "completed": false
+    }
+  ],
+  "page": 1,
+  "page_size": 10,
+  "total_pages": 3,
+  "total_items": 30
+}

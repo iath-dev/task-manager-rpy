@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "email": "user1@example.com",
+    "full_name": "User One",
+    "role": "COMMON",
+    "last_access": "2025-08-12T10:00:00Z",
+    "is_active": true
+  },
+  {
+    "id": 2,
+    "email": "user2@example.com",
+    "full_name": "User Two",
+    "role": "COMMON",
+    "last_access": "2025-08-12T11:00:00Z",
+    "is_active": true
+  },
+  {
+    "id": 3,
+    "email": "user3@example.com",
+    "full_name": "User Three",
+    "role": "COMMON",
+    "last_access": "2025-08-12T12:00:00Z",
+    "is_active": false
+  },
+  {
+    "id": 4,
+    "email": "user4@example.com",
+    "full_name": "User Four",
+    "role": "COMMON",
+    "last_access": "2025-08-12T13:00:00Z",
+    "is_active": true
+  },
+  {
+    "id": 5,
+    "email": "user5@example.com",
+    "full_name": "User Five",
+    "role": "COMMON",
+    "last_access": "2025-08-12T14:00:00Z",
+    "is_active": true
+  },
+  {
+    "id": 6,
+    "email": "user6@example.com",
+    "full_name": "User Six",
+    "role": "COMMON",
+    "last_access": "2025-08-12T15:00:00Z",
+    "is_active": false
+  },
+  {
+    "id": 7,
+    "email": "user7@example.com",
+    "full_name": "User Seven",
+    "role": "ADMIN",
+    "last_access": "2025-08-12T16:00:00Z",
+    "is_active": true
+  },
+  {
+    "id": 8,
+    "email": "user8@example.com",
+    "full_name": "User Eight",
+    "role": "COMMON",
+    "last_access": "2025-08-12T17:00:00Z",
+    "is_active": true
+  },
+  {
+    "id": 9,
+    "email": "user9@example.com",
+    "full_name": "User Nine",
+    "role": "ADMIN",
+    "last_access": "2025-08-12T18:00:00Z",
+    "is_active": true
+  },
+  {
+    "id": 10,
+    "email": "user10@example.com",
+    "full_name": "User Ten",
+    "role": "COMMON",
+    "last_access": "2025-08-12T19:00:00Z",
+    "is_active": true
+  }
+]
