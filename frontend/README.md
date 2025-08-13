@@ -1,88 +1,72 @@
-# React + TypeScript + Vite
+# Frontend - Interfaz de Usuario del Gestor de Tareas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este es el frontend para la aplicación de gestión de tareas, construido con React y Vite.
 
-Currently, two official plugins are available:
+## Tecnologías Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+*   **Framework:** React 19
+*   **Lenguaje:** TypeScript
+*   **Herramienta de Construcción:** Vite
+*   **Estilos:** Tailwind CSS
+*   **Enrutamiento:** React Router DOM v6
+*   **Componentes de UI:** Shadcn
 
-## Expanding the ESLint configuration
+## Estructura del Proyecto
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```
+frontend/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── context/
+│   ├── features/
+│   ├── hooks/
+│   ├── interfaces/
+│   ├── layouts/
+│   ├── lib/
+│   ├── pages/
+│   ├── providers/
+│   ├── routes/
+│   ├── services/
+│   └── store/
+├── vite.config.ts
+├── package.json
+└── README.md
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Configuración y Ejecución
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+### Prerrequisitos
 
-export default tseslint.config([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+*   Node.js
+*   npm
+
+### Desarrollo Local
+
+1.  **Instalar dependencias:**
+
+    ```bash
+    npm install
+    ```
+
+2.  **Ejecutar el servidor de desarrollo:**
+
+    ```bash
+    npm run dev
+    ```
+
+### Docker
+
+Consulte el `README.md` de la raíz del proyecto para obtener instrucciones sobre cómo ejecutar la aplicación con Docker Compose.
+
+## Pruebas (Testing)
+
+Este proyecto utiliza **Cypress** para las pruebas de componentes. La estrategia de pruebas se centra en un **enfoque basado en componentes**, donde las pruebas se encuentran junto a los componentes mismos (por ejemplo, `MiComponente.cy.tsx`).
+
+Nuestra filosofía es probar a fondo la lógica y la funcionalidad personalizadas de la aplicación. Evitamos escribir pruebas redundantes para componentes importados de bibliotecas de terceros como **Shadcn**, ya que se asume que están bien probados por sus mantenedores. Esto nos permite centrar nuestros esfuerzos de prueba en nuestro propio código, garantizando su corrección y fiabilidad.
+
+Para ejecutar las pruebas, utilice el siguiente comando:
+
+```bash
+npm run cypress:open:component
 ```
-
-## Implemented Features
-
-- Dark/light mode with preference persistence.
-- Task list with advanced filtering and sorting.
-- Form for creating and editing tasks with validation.
-- Admin panel for user management.
-- Global state management with Zustand.
-- Dashboard with task metrics.
-
-## Missing Features
-
-Here's a list of features that are planned but not yet implemented in the frontend:
-
-- Lazy loading and code splitting.
-- Visualizations and charts for task analytics.
-- Statistics section with charts.
-- Real-time notification system (Optional).
-- Implement component tests with Cypress.
