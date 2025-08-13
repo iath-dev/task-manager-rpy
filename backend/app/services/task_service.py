@@ -5,7 +5,8 @@ import math
 
 from app.db.models.task import Task
 from app.db.models.user import User, RoleEnum
-from app.schemas.task import TaskCreate, TaskUpdate, PriorityEnum, TaskPage, TaskStatistics, TaskQueryParams, OrderDirection
+from app.schemas.task import TaskCreate, TaskUpdate, PriorityEnum, TaskStatistics, TaskQueryParams, OrderDirection, TaskOut
+from app.schemas.common import Page
 from app.services import user_service
 from sqlalchemy import func, asc, desc
 
@@ -22,7 +23,7 @@ def get_tasks(
     db: Session,
     user: User,
     query_params: TaskQueryParams,
-) -> TaskPage:
+) -> Page[TaskOut]:
     query = db.query(Task)
 
     if query_params.assigned_to_me:
@@ -57,14 +58,12 @@ def get_tasks(
 
     tasks = query.offset(offset).limit(query_params.page_size).all()
 
-    return TaskPage(
+    return Page(
         items=tasks,
         total_items=total_items,
         total_pages=total_pages,
         page=query_params.page,
         page_size=query_params.page_size,
-        order_by=query_params.order_by,
-        order_direction=query_params.order_direction,
     )
 
 def get_task_statistics(db: Session, user: User) -> TaskStatistics:

@@ -1,9 +1,10 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Literal
+from typing import Optional
 
 from app.schemas.user import UserOutPublic
+from app.schemas.common import QueryParams
 
 class PriorityEnum(str, Enum):
     high = "high"
@@ -51,24 +52,13 @@ class TaskOut(TaskBase):
     class Config:
         from_attributes = True
 
-class TaskQueryParams(BaseModel):
-    page: int = Field(1, ge=1)
-    page_size: int = Field(10, ge=1, le=100)
+class TaskQueryParams(QueryParams):
     priority: Optional[PriorityEnum] = None
     search: Optional[str] = None
     user_email: Optional[str] = None
     assigned_to_me: bool = False
     order_by: TaskOrderField = TaskOrderField.created_at
     order_direction: OrderDirection = OrderDirection.desc
-
-class TaskPage(BaseModel):
-    items: list[TaskOut]
-    total_items: int
-    total_pages: int
-    page: int
-    page_size: int
-    order_by: TaskOrderField
-    order_direction: OrderDirection
 
 class TaskStatistics(BaseModel):
     total_tasks: int

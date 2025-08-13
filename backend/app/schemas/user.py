@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, EmailStr
 from enum import Enum
+from app.schemas.common import QueryParams
 
 class RoleEnum(str, Enum):
     admin = "ADMIN"
@@ -40,19 +41,13 @@ class UserOutPublic(BaseModel):
     class Config:
         from_attributes = True
 
-class UserPaginated(BaseModel):
-    items: list[UserOut]
-    total_items: int
-    total_pages: int
-    page: int
-    size: int
-
-class UserFilter(BaseModel):
-    full_name: str | None = None
-    role: RoleEnum | None = None
-
 class UserSortOptions(str, Enum):
     full_name_asc = "full_name_asc"
     full_name_desc = "full_name_desc"
     email_asc = "email_asc"
     email_desc = "email_desc"
+
+class UserQueryParams(QueryParams):
+    full_name: str | None = None
+    role: RoleEnum | None = None
+    sort_by: UserSortOptions | None = None

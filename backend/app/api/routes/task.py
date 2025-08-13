@@ -3,7 +3,8 @@ from typing import List
 from fastapi import HTTPException, status, Depends, APIRouter
 from sqlalchemy.orm import Session
 
-from app.schemas.task import TaskCreate, TaskUpdate, TaskOut, TaskPage, TaskStatistics, TaskQueryParams
+from app.schemas.task import TaskCreate, TaskUpdate, TaskOut, TaskStatistics, TaskQueryParams
+from app.schemas.common import Page
 from app.schemas.comment import CommentCreate, Comment
 from app.services import task_service, comment_service
 from app.api.deps import get_db, get_current_user
@@ -11,18 +12,18 @@ from app.db.models.user import User
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
-@router.post("/", response_model=TaskOut, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=TaskOut, status_code=status.HTTP_201_CREATED, summary="Create Task", description="Create a new task.")
 def create_task(task: TaskCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return task_service.create_task(db=db, task=task, user_id=current_user.id)
 
-@router.get("/statistics", response_model=TaskStatistics)
+@router.get("/statistics", response_model=TaskStatistics, summary="Get Task Statistics")
 def get_task_statistics(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """
     Get task statistics (total, completed, pending, and percentages).
     """
     return task_service.get_task_statistics(db, current_user)
 
-@router.get("/", response_model=TaskPage)
+@router.get("/", response_model=Page[TaskOut], summary="Read Tasks", description="Retrieve a list of tasks with pagination, filtering, and sorting.")
 def read_tasks(
     query_params: TaskQueryParams = Depends(),
     db: Session = Depends(get_db),
@@ -35,28 +36,28 @@ def read_tasks(
     )
     return tasks_page
 
-@router.get("/{task_id}", response_model=TaskOut)
+@router.get("/{task_id}", response_model=TaskOut, summary="Read Task", description="Retrieve a single task by its ID.")
 def read_task(task_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_task = task_service.get_task(db, task_id=task_id, user=current_user)
     if db_task is None:
         raise HTTPException(status_code=404, detail="Task not found")
     return db_task
 
-@router.put("/{task_id}", response_model=TaskOut)
+@router.put("/{task_id}", response_model=TaskOut, summary="Update Task", description="Update an existing task by its ID.")
 def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_task = task_service.update_task(db, task_id=task_id, task_update=task, user=current_user)
     if db_task is None:
         raise HTTPException(status_code=404, detail="Task not found")
     return db_task
 
-@router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete Task", description="Delete a task by its ID.")
 def delete_task(task_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_task = task_service.delete_task(db, task_id=task_id, user=current_user)
     if db_task is None:
         raise HTTPException(status_code=404, detail="Task not found")
     return
 
-@router.post("/{task_id}/comments", response_model=Comment, status_code=status.HTTP_201_CREATED)
+@router.post("/{task_id}/comments", response_model=Comment, status_code=status.HTTP_201_CREATED, summary="Create Comment for Task", description="Add a new comment to a specific task.")
 def create_comment_for_task(
     task_id: int,
     comment: CommentCreate,
@@ -68,7 +69,7 @@ def create_comment_for_task(
         raise HTTPException(status_code=404, detail="Task not found")
     return comment_service.create_comment(db=db, comment=comment, task_id=task_id, owner=current_user)
 
-@router.get("/{task_id}/comments", response_model=List[Comment], status_code=status.HTTP_200_OK)
+@router.get("/{task_id}/comments", response_model=List[Comment], status_code=status.HTTP_200_OK, summary="Get Comments for Task", description="Retrieve all comments for a specific task.")
 def get_comment_for_task(
     task_id: int,
     db: Session = Depends(get_db),

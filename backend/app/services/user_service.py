@@ -4,7 +4,8 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.db.models.user import User
-from app.schemas.user import UserCreate, UserUpdate, UserFilter, UserSortOptions
+from app.schemas.user import UserCreate, UserUpdate, UserSortOptions, UserOut, UserQueryParams
+from app.schemas.common import Page
 from app.core.security import hash_password
 
 def get_user(db: Session, user_id: int):
@@ -19,32 +20,32 @@ def get_user_by_email(db: Session, email: str):
     """
     return db.query(User).filter(User.email == email).first()
 
-def get_users(db: Session, page: int = 1, page_size: int = 10, user_filter: UserFilter = UserFilter(), sort_by: UserSortOptions = UserSortOptions.full_name_asc):
+def get_users(db: Session, query_params: UserQueryParams) -> Page[UserOut]:
     """
     Get all users from the database with pagination, filtering, and sorting.
     """
     query = db.query(User)
 
-    if user_filter.full_name:
-        query = query.filter(User.full_name.ilike(f"%{user_filter.full_name}%"))
-    if user_filter.role:
-        query = query.filter(User.role == user_filter.role)
+    if query_params.full_name:
+        query = query.filter(User.full_name.ilike(f"%{query_params.full_name}%"))
+    if query_params.role:
+        query = query.filter(User.role == query_params.role)
 
     total = query.count()
-    total_pages = math.ceil(total / page_size)
+    total_pages = math.ceil(total / query_params.page_size)
 
-    if sort_by == UserSortOptions.full_name_asc:
+    if query_params.sort_by == UserSortOptions.full_name_asc:
         query = query.order_by(User.full_name.asc())
-    elif sort_by == UserSortOptions.full_name_desc:
+    elif query_params.sort_by == UserSortOptions.full_name_desc:
         query = query.order_by(User.full_name.desc())
-    elif sort_by == UserSortOptions.email_asc:
+    elif query_params.sort_by == UserSortOptions.email_asc:
         query = query.order_by(User.email.asc())
-    elif sort_by == UserSortOptions.email_desc:
+    elif query_params.sort_by == UserSortOptions.email_desc:
         query = query.order_by(User.email.desc())
 
-    skip = (page - 1) * page_size
-    users = query.offset(skip).limit(page_size).all()
-    return {"items": users, "total_items": total, "total_pages": total_pages, "page": page, "size": page_size}
+    skip = (query_params.page - 1) * query_params.page_size
+    users = query.offset(skip).limit(query_params.page_size).all()
+    return Page(items=users, total_items=total, total_pages=total_pages, page=query_params.page, page_size=query_params.page_size)
 
 def get_all_users_emails(db: Session):
     """
