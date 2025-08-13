@@ -9,24 +9,22 @@ services:
     volumes:
       - ./backend:/app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/task_db
+      - SECRET_KEY=doZIgL8egh3mL1 # ¡IMPORTANTE! Cambia esto por una clave segura
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
     build: ./frontend
     container_name: react-frontend
     ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - "80:80" # Puerto estándar para Nginx
     depends_on:
       - backend
     environment:
-      - CHOKIDAR_USEPOLLING=true
-    command: npm start
+      - VITE_API_BASE_URL=http://backend:8000/api/v1 # Comunicación entre contenedores
 
   db:
     image: postgres:15
@@ -34,6 +32,11 @@ services:
     ports:
       - "5432:5432"
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d task_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
       POSTGRES_DB: task_db
       POSTGRES_USER: postgres
